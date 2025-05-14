@@ -1,0 +1,15 @@
+#canvas1 {
+    position: absolute;
+    background: black;
+    border: 1px solid black;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(4);
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: pixelated;
+}
+
+body {
+    background: #1E1F3B;
+}
