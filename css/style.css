@@ -1,10 +1,15 @@
+:root {
+    --canvas-scale: 4;
+}
+
 #canvas1 {
     position: absolute;
-    background: black;
-    border: 1px solid black;
+    background: #1E1F3B;
+    /* border: 1px solid black; */
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(4);
+    transform: translate(-50%, -50%) scale(var(--canvas-scale));
+    transition: transform 1s ease;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: -moz-crisp-edges;
     image-rendering: pixelated;
