@@ -3,14 +3,25 @@ const ctx = canvas.getContext('2d');
 
 const images = {
     level1: new Image(),
-    player: new Image()
+    player: new Image(),
+    player1: new Image(),
+    tile: new Image(),
+    brokenTile: new Image(),
+    keyTile: new Image(),
 }
 
 images.level1.src = 'assets/Level 1.png';
 images.player.src = 'assets/Player.png';
+images.player1.src = 'assets/Player1.png';
+images.tile.src = 'assets/Tile.png';
+images.brokenTile.src = 'assets/TileBroken.png';
+images.keyTile.src = 'assets/TileKey.png';
 
 let playerX = 96;
 let playerY = 96;
+
+let playerSpriteX = 96;
+let playerSpriteY = 96;
 
 let tileX = 6;
 let tileY = 6;
@@ -46,26 +57,53 @@ document.addEventListener("DOMContentLoaded", (event) => {
         ctx.drawImage(images.level1, 0, 0);
         drawTiles();
         ctx.drawImage(images.player, playerX, playerY);
+
+        playerAnimation()
     }, 200)
 });
 
 // document.documentElement.style.setProperty('--canvas-scale', '3');
 
+let frame = 0;
+let playerIdleState = true;
+
+function playerAnimation() {
+    ctx.drawImage(images.level1, 0, 0);
+    drawTiles();
+    if (playerIdleState) {
+        ctx.drawImage(images.player, playerSpriteX, playerSpriteY);
+    } else {
+        ctx.drawImage(images.player1, playerSpriteX, playerSpriteY);
+    }
+
+    frame++;
+
+    if (frame % 30 == 0) {
+        playerIdleState = !playerIdleState;
+    }
+
+    if (playerX > playerSpriteX) {
+        playerSpriteX++;
+    } else if (playerX < playerSpriteX) {
+        playerSpriteX--;
+    } else if (playerY > playerSpriteY) {
+        playerSpriteY++;
+    } else if (playerY < playerSpriteY) {
+        playerSpriteY--;
+    }
+
+    requestAnimationFrame(playerAnimation);
+}
+
 function drawTiles() {
     for (let y = 0; y < levelLayout.length; y++) {
         for (let x = 0; x < levelLayout[y].length; x++) {
             if (levelLayout[y][x] == 1) {
-                ctx.fillStyle = "grey";
-                ctx.fillRect(x * 16, y * 16, 16, 16);
-                console.log("filling")
+                ctx.drawImage(images.tile, x * 16, y * 16);
             } else if (levelLayout[y][x] == 2) {
-                ctx.fillStyle = "black";
-                ctx.fillRect(x * 16, y * 16, 16, 16);
-                console.log("filling")
+                ctx.drawImage(images.brokenTile, x * 16, y * 16);
             } else if (levelLayout[y][x] == 3) {
-                ctx.fillStyle = "yellow";
-                ctx.fillRect(x * 16, y * 16, 16, 16);
-                console.log("filling")
+                ctx.drawImage(images.keyTile, x * 16, y * 16);
             }
         }
     }
@@ -169,8 +207,4 @@ document.addEventListener("keypress", (event) => {
             nextLevel();
         }
     }
-
-    ctx.drawImage(images.level1, 0, 0);
-    drawTiles();
-    ctx.drawImage(images.player, playerX, playerY);
 })
