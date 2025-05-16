@@ -270,13 +270,13 @@ function nextLevel() {
 
 let startX, startY;
 
-element.addEventListener('touchstart', (event) => {
+canvas.addEventListener('touchstart', (event) => {
   startX = event.touches[0].clientX;
   startY = event.touches[0].clientY;
   console.log("touch start");
 });
 
-element.addEventListener('touchend', (event) => {
+canvas.addEventListener('touchend', (event) => {
   const endX = event.changedTouches[0].clientX;
   const endY = event.changedTouches[0].clientY;
   const deltaX = endX - startX;
