@@ -1,5 +1,29 @@
+function setupPixelCanvas(canvas, logicalWidth, logicalHeight) {
+    const dpr = window.devicePixelRatio || 1;
+    console.log(window.devicePixelRatio)
+    canvas.width = logicalWidth * dpr;
+    canvas.height = logicalHeight * dpr;
+
+    const ctx = canvas.getContext('2d');
+    // scale your drawing operations back to 1:1 logical pixels
+    ctx.scale(dpr, dpr);
+
+    // turn off smoothing as above
+    ctx.imageSmoothingEnabled = false;
+    ctx.webkitImageSmoothingEnabled = false;
+    ctx.mozImageSmoothingEnabled = false;
+    ctx.msImageSmoothingEnabled = false;
+
+    return ctx;
+}
+
 const canvas = document.getElementById('canvas1');
-const ctx = canvas.getContext('2d');
+const ctx = setupPixelCanvas(canvas, 192, 256);
+
+ctx.imageSmoothingEnabled = false;
+ctx.webkitImageSmoothingEnabled = false;
+ctx.mozImageSmoothingEnabled = false;
+ctx.msImageSmoothingEnabled = false;
 
 const images = {
     level1: new Image(),
@@ -57,7 +81,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
         ctx.drawImage(images.player, playerX, playerY);
 
         playerAnimation()
-    }, 20)
+
+        document.documentElement.style.setProperty('--canvas-scale', (4 / window.devicePixelRatio).toString());
+
+        setTimeout(() => {
+            document.documentElement.style.setProperty('--scale-speed', '1s');
+        }, 100,);
+    }, 200)
 });
 
 // document.documentElement.style.setProperty('--canvas-scale', '3');
@@ -95,11 +125,13 @@ document.addEventListener("keyup", (event) => {
     }
 });
 
-let frame = 0;
+let frame = -10;
 let playerIdleState = true;
 let playerAnimationState = 0;
-
 let playerDirection = "none";
+
+let finishAnimationFrame = 0;
+let finishAnimation = false;
 
 const speed = 2;
 const playerOffset = 5;
@@ -241,9 +273,27 @@ function playerAnimation() {
             for (let x = 0; x < levelLayout[y].length; x++) {
                 if (levelLayout[y][x] == 2) {
                     levelLayout[y][x] = 5;
-                    console.log("changing");
                 }
             }
+        }
+    }
+
+    if (frame < 128 && !finishAnimation) {
+        ctx.fillStyle = "#1E1F3B";
+        ctx.fillRect(0, 0, 192, 128 - frame);
+        ctx.fillRect(0, 128 + frame, 192, 128 - frame);
+    }
+
+    if (finishAnimation) {
+        ctx.fillStyle = "#1E1F3B";
+        ctx.fillRect(0, 0, 192, finishAnimationFrame);
+        ctx.fillRect(0, 256 - finishAnimationFrame, 192, finishAnimationFrame);
+        
+        finishAnimationFrame++;
+
+        if (finishAnimationFrame > 128) {
+            // finishAnimation = false;
+            // frame = -10;
         }
     }
 
@@ -265,47 +315,55 @@ function drawTiles() {
 }
 
 function nextLevel() {
-
+    setTimeout(() => {
+        // document.documentElement.style.setProperty('--canvas-scale', (100 / window.devicePixelRatio).toString());
+        finishAnimation = true;
+        finishAnimationFrame = 0;
+    }, 100);
 }
 
 let startX, startY;
 
-canvas.addEventListener('touchstart', (event) => {
-  startX = event.touches[0].clientX;
-  startY = event.touches[0].clientY;
-  console.log("touch start");
+document.addEventListener('touchstart', (event) => {
+    startX = event.touches[0].clientX;
+    startY = event.touches[0].clientY;
+    console.log("touch start");
 });
 
-canvas.addEventListener('touchend', (event) => {
-  const endX = event.changedTouches[0].clientX;
-  const endY = event.changedTouches[0].clientY;
-  const deltaX = endX - startX;
-  const deltaY = endY - startY;
+document.addEventListener('touchmove', (event) => {
+    const endX = event.changedTouches[0].clientX;
+    const endY = event.changedTouches[0].clientY;
+    const deltaX = endX - startX;
+    const deltaY = endY - startY;
 
-  // Check if it's a swipe (minimal distance threshold)
-  const swipeThreshold = 50;
-  if (Math.abs(deltaX) > swipeThreshold || Math.abs(deltaY) > swipeThreshold) {
-    // Determine swipe direction
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-      // Horizontal swipe
-      if (deltaX > 0) {
-        console.log('Swiped right');
-        move("right");
-      } else {
-        console.log('Swiped left');
-        move("left");
-      }
-    } else {
-      // Vertical swipe
-      if (deltaY > 0) {
-        console.log('Swiped down');
-        move("down");
-      } else {
-        console.log('Swiped up');
-        move("up");
-      }
+    // Check if it's a swipe (minimal distance threshold)
+    const swipeThreshold = 50;
+    if (Math.abs(deltaX) > swipeThreshold || Math.abs(deltaY) > swipeThreshold) {
+        // Determine swipe direction
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            // Horizontal swipe
+            if (deltaX > 0) {
+                console.log('Swiped right');
+                move("right");
+                // document.documentElement.style.setProperty('--canvas-scale', '1');
+            } else {
+                console.log('Swiped left');
+                move("left");
+                // document.documentElement.style.setProperty('--canvas-scale', '3');
+            }
+        } else {
+            // Vertical swipe
+            if (deltaY > 0) {
+                console.log('Swiped down');
+                move("down");
+                // document.documentElement.style.setProperty('--canvas-scale', '2');
+            } else {
+                console.log('Swiped up');
+                move("up");
+                // document.documentElement.style.setProperty('--canvas-scale', '4');
+            }
+        }
     }
-  }
 });
 
 function move(direction) {

@@ -1,20 +1,29 @@
 :root {
-    --canvas-scale: 4;
+    --canvas-scale: 1;
+    --scale-speed: 0.1s;
 }
 
 #canvas1 {
     position: absolute;
     background: #1E1F3B;
-    /* border: 1px solid black; */
+    /* border: 1px solid grey; */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(var(--canvas-scale));
-    transition: transform 1s ease;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: -moz-crisp-edges;
+    transition: transform var(--scale-speed) ease;
     image-rendering: pixelated;
 }
 
 body {
     background: #1E1F3B;
+    overflow: hidden;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+::-webkit-scrollbar {
+    display: none;
 }
