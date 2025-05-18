@@ -1,12 +1,11 @@
 function setupPixelCanvas(canvas, logicalWidth, logicalHeight) {
     const dpr = window.devicePixelRatio || 1;
-    console.log(window.devicePixelRatio)
-    canvas.width = logicalWidth * dpr;
-    canvas.height = logicalHeight * dpr;
+    canvas.width = logicalWidth * dpr * 4;
+    canvas.height = logicalHeight * dpr * 4;
 
     const ctx = canvas.getContext('2d');
     // scale your drawing operations back to 1:1 logical pixels
-    ctx.scale(dpr, dpr);
+    ctx.scale(dpr * 4, dpr * 4);
 
     // turn off smoothing as above
     ctx.imageSmoothingEnabled = false;
@@ -20,12 +19,34 @@ function setupPixelCanvas(canvas, logicalWidth, logicalHeight) {
 const canvas = document.getElementById('canvas1');
 const ctx = setupPixelCanvas(canvas, 192, 256);
 
-ctx.imageSmoothingEnabled = false;
-ctx.webkitImageSmoothingEnabled = false;
-ctx.mozImageSmoothingEnabled = false;
-ctx.msImageSmoothingEnabled = false;
+const restartButton = document.getElementById('restart');
+
+restartButton.addEventListener("click", restart)
+
+function restart() {
+    console.log("Restart");
+
+    frame = -10;
+    playerDirection = "none";
+    finishAnimation = false;
+
+    levelLayout = levels[level].layout.map(function (arr) {
+        return arr.slice();
+    });
+    keys = 0;
+
+    playerX = levels[level].startX * 16;
+    playerY = levels[level].startY * 16;
+
+    playerSpriteX = levels[level].startX * 16;
+    playerSpriteY = levels[level].startY * 16;
+
+    tileX = levels[level].startX;
+    tileY = levels[level].startY;
+}
 
 const images = {
+    tiles: new Image(),
     level1: new Image(),
     player: new Image(),
     tile: new Image(),
@@ -33,56 +54,85 @@ const images = {
     keyTile: new Image(),
 }
 
+images.tiles.src = 'assets/Tile Sheet.png';
 images.level1.src = 'assets/Level 1.png';
 images.player.src = 'assets/Player Sheet.png';
 images.tile.src = 'assets/Tile.png';
 images.brokenTile.src = 'assets/TileBroken.png';
 images.keyTile.src = 'assets/TileKey.png';
 
-let playerX = 96;
-let playerY = 96;
-
-let playerSpriteX = 96;
-let playerSpriteY = 96;
-
-let tileX = 6;
-let tileY = 6;
-
-let keys = 0;
-
 const levels = [
-    [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 4, 1, 0, 3, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    ]
+    {
+        zoom: 1,
+        startX: 6,
+        startY: 6,
+        keys: 1,
+        layout: [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 4, 1, 0, 3, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        ]
+    },
+    {
+        zoom: 0.45,
+        startX: 7,
+        startY: 10,
+        keys: 1,
+        layout: [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 4, 1, 0, 3, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        ]
+    }
 ]
 
 let level = 0;
-let levelLayout = levels[level];
+let levelLayout = levels[level].layout.map(function (arr) {
+    return arr.slice();
+});
+
+let playerX = levels[level].startX * 16;
+let playerY = levels[level].startY * 16;
+
+let playerSpriteX = levels[level].startX * 16;
+let playerSpriteY = levels[level].startY * 16;
+
+let tileX = levels[level].startX;
+let tileY = levels[level].startY;
+
+let keys = 0;
 
 document.addEventListener("DOMContentLoaded", (event) => {
     setTimeout(() => {
-        ctx.drawImage(images.level1, 0, 0);
-        drawTiles();
-        ctx.drawImage(images.player, playerX, playerY);
-
         playerAnimation()
 
-        document.documentElement.style.setProperty('--canvas-scale', (4 / window.devicePixelRatio).toString());
+        document.documentElement.style.setProperty('--canvas-scale', (levels[level].zoom / window.devicePixelRatio).toString());
 
         setTimeout(() => {
             document.documentElement.style.setProperty('--scale-speed', '1s');
@@ -101,7 +151,7 @@ const keysPressed = {
 
 document.addEventListener("keydown", (event) => {
     if (event.code === "KeyR") {
-        window.location.reload();
+        restart();
     } else if (event.code === "KeyW") {
         keysPressed.w = true;
     } else if (event.code === "KeyS") {
@@ -137,7 +187,9 @@ const speed = 2;
 const playerOffset = 5;
 
 function playerAnimation() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(images.level1, 0, 0);
+    // drawLevel();
     drawTiles();
 
     frame++;
@@ -268,10 +320,18 @@ function playerAnimation() {
         if (keysPressed.d && !keysPressed.a) {
             move("right");
         }
+    }
 
-        for (let y = 0; y < levelLayout.length; y++) {
-            for (let x = 0; x < levelLayout[y].length; x++) {
-                if (levelLayout[y][x] == 2) {
+    for (let y = 0; y < levelLayout.length; y++) {
+        for (let x = 0; x < levelLayout[y].length; x++) {
+            if (levelLayout[y][x] == 2) {
+                if (playerSpriteY >= (y * 16) + 10) {
+                    levelLayout[y][x] = 5;
+                } else if (playerSpriteY <= (y * 16) - 10) {
+                    levelLayout[y][x] = 5;
+                } else if (playerSpriteX >= (x * 16) + 10) {
+                    levelLayout[y][x] = 5;
+                } else if (playerSpriteX <= (x * 16) - 10) {
                     levelLayout[y][x] = 5;
                 }
             }
@@ -288,12 +348,13 @@ function playerAnimation() {
         ctx.fillStyle = "#1E1F3B";
         ctx.fillRect(0, 0, 192, finishAnimationFrame);
         ctx.fillRect(0, 256 - finishAnimationFrame, 192, finishAnimationFrame);
-        
+
         finishAnimationFrame++;
 
         if (finishAnimationFrame > 128) {
-            // finishAnimation = false;
-            // frame = -10;
+            level++;
+            document.documentElement.style.setProperty('--canvas-scale', (levels[level].zoom / window.devicePixelRatio).toString());
+            restart();
         }
     }
 
@@ -314,6 +375,17 @@ function drawTiles() {
     }
 }
 
+function drawLevel() {
+    for (let y = 0; y < levelLayout.length; y++) {
+        for (let x = 0; x < levelLayout[y].length; x++) {
+            if (levelLayout[y + 1] != undefined && levelLayout[y - 1] != undefined && levelLayout[y + 1][x] != 0)
+            if (levelLayout[y + 1] != undefined && levelLayout[y + 1][x] != 0) {
+                ctx.drawImage(images.tiles, 16, 16, 16, 16, x * 16, y * 16, 16, 16);
+            }
+        }
+    }
+}
+
 function nextLevel() {
     setTimeout(() => {
         // document.documentElement.style.setProperty('--canvas-scale', (100 / window.devicePixelRatio).toString());
@@ -327,7 +399,6 @@ let startX, startY;
 document.addEventListener('touchstart', (event) => {
     startX = event.touches[0].clientX;
     startY = event.touches[0].clientY;
-    console.log("touch start");
 });
 
 document.addEventListener('touchmove', (event) => {
@@ -343,24 +414,16 @@ document.addEventListener('touchmove', (event) => {
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
             // Horizontal swipe
             if (deltaX > 0) {
-                console.log('Swiped right');
                 move("right");
-                // document.documentElement.style.setProperty('--canvas-scale', '1');
             } else {
-                console.log('Swiped left');
                 move("left");
-                // document.documentElement.style.setProperty('--canvas-scale', '3');
             }
         } else {
             // Vertical swipe
             if (deltaY > 0) {
-                console.log('Swiped down');
                 move("down");
-                // document.documentElement.style.setProperty('--canvas-scale', '2');
             } else {
-                console.log('Swiped up');
                 move("up");
-                // document.documentElement.style.setProperty('--canvas-scale', '4');
             }
         }
     }
@@ -380,7 +443,7 @@ function move(direction) {
 
                 playerY -= 16;
                 tileY--;
-            } else if (levelLayout[tileY - 1][tileX] == 4 && keys > 0) {
+            } else if (levelLayout[tileY - 1][tileX] == 4 && keys > levels[level].keys) {
                 if (levelLayout[tileY][tileX] == 1 || levelLayout[tileY][tileX] == 3) {
                     levelLayout[tileY][tileX] = 2;
                 }
@@ -404,7 +467,7 @@ function move(direction) {
 
                 playerY += 16;
                 tileY++;
-            } else if (levelLayout[tileY + 1][tileX] == 4 && keys > 0) {
+            } else if (levelLayout[tileY + 1][tileX] == 4 && keys > levels[level].keys) {
                 if (levelLayout[tileY][tileX] == 1 || levelLayout[tileY][tileX] == 3) {
                     levelLayout[tileY][tileX] = 2;
                 }
@@ -428,7 +491,7 @@ function move(direction) {
 
                 playerX -= 16;
                 tileX--;
-            } else if (levelLayout[tileY][tileX - 1] == 4 && keys > 0) {
+            } else if (levelLayout[tileY][tileX - 1] == 4 && keys >= levels[level].keys) {
                 if (levelLayout[tileY][tileX] == 1 || levelLayout[tileY][tileX] == 3) {
                     levelLayout[tileY][tileX] = 2;
                 }
@@ -452,7 +515,7 @@ function move(direction) {
 
                 playerX += 16;
                 tileX++;
-            } else if (levelLayout[tileY][tileX + 1] == 4 && keys > 0) {
+            } else if (levelLayout[tileY][tileX + 1] == 4 && keys > levels[level].keys) {
                 if (levelLayout[tileY][tileX] == 1 || levelLayout[tileY][tileX] == 3) {
                     levelLayout[tileY][tileX] = 2;
                 }
