@@ -18,6 +18,7 @@ class Game {
         this.levels = new Levels();
         this.input = new Input(this);
         this.player = new Player(this.levels, this.ctx, this.input);
+        this.input.player = this.player;
         this.renderer = new Renderer(this.levels, this.player, this.ctx, this);
         this.player.renderer = this.renderer;
         this.tiles = new Tiles(this.levels, this.ctx, this.renderer);
