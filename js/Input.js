@@ -54,8 +54,8 @@ export default class Input {
     touchMove(event) {
         const endX = event.changedTouches[0].clientX;
         const endY = event.changedTouches[0].clientY;
-        const deltaX = endX - startX;
-        const deltaY = endY - startY;
+        const deltaX = endX - this.startX;
+        const deltaY = endY - this.startY;
 
         // Check if it's a swipe (minimal distance threshold)
         const swipeThreshold = 50;
