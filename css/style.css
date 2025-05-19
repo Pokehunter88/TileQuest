@@ -1,6 +1,6 @@
 :root {
-    --canvas-scale: 1;
-    --scale-speed: 0.1s;
+    --canvas-scale: 0.1;
+    --scale-speed: 0.2s;
 }
 
 #canvas1 {

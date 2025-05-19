@@ -388,7 +388,6 @@ function drawLevel() {
 
 function nextLevel() {
     setTimeout(() => {
-        // document.documentElement.style.setProperty('--canvas-scale', (100 / window.devicePixelRatio).toString());
         finishAnimation = true;
         finishAnimationFrame = 0;
     }, 100);
