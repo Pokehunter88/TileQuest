@@ -21,27 +21,35 @@ export default class Input {
     }
 
     keyDown(event) {
+        console.log(event.code);
+
         if (event.code === "KeyR") {
             this.game.restart();
-        } else if (event.code === "KeyW") {
+        } else if (event.code === "Escape") {
+            if (document.documentElement.style.getPropertyValue('--menu-visible') == 0 || document.documentElement.style.getPropertyValue('--menu-visible') === "") {
+                document.documentElement.style.setProperty('--menu-visible', 100);
+            } else {
+                document.documentElement.style.setProperty('--menu-visible', 0);
+            }
+        } else if (event.code === "KeyW" || event.code === "ArrowUp") {
             this.keysPressed.w = true;
-        } else if (event.code === "KeyS") {
+        } else if (event.code === "KeyS" || event.code === "ArrowDown") {
             this.keysPressed.s = true;
-        } else if (event.code === "KeyA") {
+        } else if (event.code === "KeyA" || event.code === "ArrowLeft") {
             this.keysPressed.a = true;
-        } else if (event.code === "KeyD") {
+        } else if (event.code === "KeyD" || event.code === "ArrowRight") {
             this.keysPressed.d = true;
         }
     }
 
     keyUp(event) {
-        if (event.code === "KeyW") {
+        if (event.code === "KeyW" || event.code === "ArrowUp") {
             this.keysPressed.w = false;
-        } else if (event.code === "KeyS") {
+        } else if (event.code === "KeyS" || event.code === "ArrowDown") {
             this.keysPressed.s = false;
-        } else if (event.code === "KeyA") {
+        } else if (event.code === "KeyA" || event.code === "ArrowLeft") {
             this.keysPressed.a = false;
-        } else if (event.code === "KeyD") {
+        } else if (event.code === "KeyD" || event.code === "ArrowRight") {
             this.keysPressed.d = false;
         }
     }

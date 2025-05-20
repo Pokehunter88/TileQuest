@@ -15,6 +15,20 @@ class Game {
         this.restartButton = document.getElementById('restart');
         this.restartButton?.addEventListener("click", () => this.restart());
 
+        this.menuButton = document.getElementById('menu-button');
+        this.menuButton?.addEventListener("click", () => {
+            if (document.documentElement.style.getPropertyValue('--menu-visible') == 0 || document.documentElement.style.getPropertyValue('--menu-visible') === "") {
+                document.documentElement.style.setProperty('--menu-visible', 100);
+            } else {
+                document.documentElement.style.setProperty('--menu-visible', 0);
+            }
+        });
+
+        this.closeButton = document.getElementById('close-button');
+        this.closeButton?.addEventListener("click", () => {
+            document.documentElement.style.setProperty('--menu-visible', 0);
+        });
+
         this.levels = new Levels();
         this.input = new Input(this);
         this.player = new Player(this.levels, this.ctx, this.input);
@@ -22,6 +36,40 @@ class Game {
         this.renderer = new Renderer(this.levels, this.player, this.ctx, this);
         this.player.renderer = this.renderer;
         this.tiles = new Tiles(this.levels, this.ctx, this.renderer);
+
+        this.leftButton = document.getElementById('menu-left');
+        this.leftButton?.addEventListener("click", () => {
+            if (document.documentElement.style.getPropertyValue('--menu-visible') == 100) {
+                if (this.levels.level == 0) {
+                    this.levels.level = this.levels.levels.length - 1;
+                } else {
+                    this.levels.level--;
+                }
+
+                document.documentElement.style.setProperty('--canvas-scale', (this.levels.levels[this.levels.level].zoom / window.devicePixelRatio).toString());
+
+                this.restart();
+
+                document.documentElement.style.setProperty('--menu-visible', 0);
+            }
+        });
+
+        this.rightButton = document.getElementById('menu-right');
+        this.rightButton?.addEventListener("click", () => {
+            if (document.documentElement.style.getPropertyValue('--menu-visible') == 100) {
+                if (this.levels.level + 1 >= this.levels.levels.length) {
+                    this.levels.level = 0;
+                } else {
+                    this.levels.level++
+                }
+
+                document.documentElement.style.setProperty('--canvas-scale', (this.levels.levels[this.levels.level].zoom / window.devicePixelRatio).toString());
+
+                this.restart();
+
+                document.documentElement.style.setProperty('--menu-visible', 0);
+            }
+        });
 
         this.frame = -10;
         requestAnimationFrame(() => this.update());
@@ -49,8 +97,6 @@ class Game {
     }
 
     restart() {
-        console.log("Restart");
-
         this.frame = -10;
         this.player.restart();
         this.levels.restart();
@@ -58,4 +104,6 @@ class Game {
     }
 }
 
-window.addEventListener('DOMContentLoaded', () => new Game());
+window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => new Game(), 100);
+});

@@ -41,17 +41,6 @@ export default class Renderer {
         }
     }
 
-    drawLevel() {
-        for (let y = 0; y < this.levels.levelLayout.length; y++) {
-            for (let x = 0; x < this.levels.levelLayout[y].length; x++) {
-                if (this.levels.levelLayout[y + 1] != undefined && this.levels.levelLayout[y - 1] != undefined && this.levels.levelLayout[y + 1][x] != 0)
-                    if (this.levels.levelLayout[y + 1] != undefined && this.levels.levelLayout[y + 1][x] != 0) {
-                        // this.ctx.drawImage(this.images.tiles, 16, 16, 16, 16, x * 16, y * 16, 16, 16);
-                    }
-            }
-        }
-    }
-
     update(frame) {
         if (frame < 128 && !this.finishAnimation) {
             this.ctx.fillStyle = "#1E1F3B";
@@ -68,6 +57,9 @@ export default class Renderer {
 
             if (this.finishAnimationFrame > 128) {
                 this.levels.level++;
+                if (this.levels.level >= this.levels.levels.length) {
+                    this.levels.level = 0;
+                }
                 document.documentElement.style.setProperty('--canvas-scale', (this.levels.levels[this.levels.level].zoom / window.devicePixelRatio).toString());
                 this.game.restart();
             }
@@ -80,9 +72,7 @@ export default class Renderer {
     }
 
     nextLevel() {
-        setTimeout(() => {
-            this.finishAnimation = true;
-            this.finishAnimationFrame = 0;
-        }, 100);
+        this.finishAnimation = true;
+        this.finishAnimationFrame = 0;
     }
 }

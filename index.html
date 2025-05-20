@@ -1,19 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Tile Quest</title>
-    <link rel="stylesheet" href="css/style.css">
-    <!-- <link rel="preload" as="image" href="assets/Level 1.png" />
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Tile Quest</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- <link rel="preload" as="image" href="assets/Level 1.png" />
     <link rel="preload" as="image" href="assets/Player.png" /> -->
-  </head>
-  <body>
-    <canvas id="canvas1" width="192" height="256"></canvas>
+</head>
 
-    <img src="assets/Tile.png" alt="restart" id="restart">
+<body>
+  <canvas id="canvas1" width="192" height="256"></canvas>
 
-    <script type="module" src="js/Game.js"></script>
-  </body>
+  <img src="assets/Restart Button.png" alt="restart" id="restart">
+  <img src="assets/Menu Button.png" alt="menu" id="menu-button">
+
+  <div id="menu-container">
+    <img src="assets/Menu.png" alt="menu background" id="menu-bg">
+
+    <img src="assets/Close Button.png" alt="close button" id="close-button">
+    <img src="assets/Left Arrow.png" alt="left arrow" id="menu-left">
+    <img src="assets/Right Arrow.png" alt="right arrow" id="menu-right">
+  </div>
+
+  <script type="module" src="js/Game.js"></script>
+</body>
+
 </html>
