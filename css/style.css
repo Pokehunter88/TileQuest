@@ -11,7 +11,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(var(--canvas-scale));
-    transition: transform var(--scale-speed) ease-in;
+    transition: transform var(--scale-speed) ease;
     image-rendering: pixelated;
 }
 
@@ -25,6 +25,7 @@
     height: 70px;
 
     image-rendering: pixelated;
+    z-index: 3;
 }
 
 #menu-button {
@@ -37,14 +38,17 @@
     height: 70px;
 
     image-rendering: pixelated;
+    z-index: 3;
 }
 
 #menu-container {
     position: relative;
     top: 50%;
-    transform: translate(0, -50%);
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 70vw;
-    margin: 0 auto;
+    max-width: 500px;
+    /* margin: 0 auto; */
     /* center horizontally */
     image-rendering: pixelated;
 }
@@ -54,6 +58,7 @@
     width: 100%;
     opacity: var(--menu-visible);
     transition: opacity 0.1s ease-in;
+    z-index: 4;
 }
 
 #menu-left,
@@ -61,6 +66,7 @@
 #close-button {
     position: absolute;
     image-rendering: pixelated;
+    z-index: 5;
 }
 
 /* Arrows centered vertically, hugging left/right edges */

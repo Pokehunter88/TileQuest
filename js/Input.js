@@ -21,8 +21,6 @@ export default class Input {
     }
 
     keyDown(event) {
-        console.log(event.code);
-
         if (event.code === "KeyR") {
             this.game.restart();
         } else if (event.code === "Escape") {
