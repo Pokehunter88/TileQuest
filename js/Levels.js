@@ -1,8 +1,10 @@
 export default class Levels {
-    constructor() {
+    constructor(canvas) {
+        this.canvas = canvas;
+
         this.levels = [
             {
-                zoom: 0.8,
+                zoom: 2,
                 startX: 6,
                 startY: 6,
                 keys: 1,
@@ -63,5 +65,13 @@ export default class Levels {
         this.levelLayout = this.levels[this.level].layout.map(function (arr) {
             return arr.slice();
         });
+    }
+
+    getZoom(level) {
+        let height = 5;
+
+        console.log(this.canvas.width / window.devicePixelRatio / 4, this.canvas.height / window.devicePixelRatio / 4);
+
+        return this.levels[level].zoom.toString();
     }
 }

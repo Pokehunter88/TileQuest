@@ -51,9 +51,10 @@
             background-color: peru
         }
 
-        #output {
-            width: 100%;
-            height: 150px;
+        #output,
+        #input {
+            width: 400px;
+            height: 300px;
             margin-top: 10px
         }
     </style>
@@ -61,6 +62,16 @@
 
 <body>
     <h1>12x16 Level Editor</h1>
+    <textarea id="input" placeholder="Place level data here..."></textarea>
+    <div class="level-controls">
+        <strong id="level">Selected Level: 1</strong>
+        <button onclick="loadLevel()">Load Level</button>
+        <button onclick="saveLevels()">Save Levels</button>
+        <button onclick="previousLevel()">Previous Level</button>
+        <button onclick="nextLevel()">Next Level</button>
+        <button onclick="addLevel()">Add Level</button>
+        <button onclick="removeLevel()">Remove Level</button>
+    </div>
     <div class="palette">
         <strong>Selected Tile:</strong>
         <button data-type="path">Path (1)</button>
@@ -71,98 +82,231 @@
     </div>
     <div class="grid" id="editor"></div>
     <button id="exportBtn">Export Level Array</button>
+    <div></div>
     <textarea id="output" placeholder="Level array will appear here..."></textarea>
     <script>
-        (function () {
-            const cols = 12;
-            const rows = 16;
-            let selectedType = 'path';
-            const codes = { path: 1, start: 2, key: 3, chest: 4, erase: 0 };
-            const gridContainer = document.getElementById('editor');
-            for (let y = 0; y < rows; y++) {
-                for (let x = 0; x < cols; x++) {
-                    const cell = document.createElement('div');
-                    cell.className = 'cell';
-                    cell.dataset.x = x;
-                    cell.dataset.y = y;
-                    cell.dataset.type = 'erase';
-                    cell.addEventListener('click', (event) => {
+        fetch('/js/levels.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("HTTP error " + response.status);
+                }
+
+                return response.json();
+            })
+            .then(json => {
+                document.getElementById('input').value = JSON.stringify(json);
+                loadLevel();
+            })
+            .catch(function (error) {
+                console.log("Failed to fetch levels");
+            })
+
+        const cols = 12;
+        const rows = 16;
+        let selectedType = 'path';
+        const codes = { path: 1, start: 2, key: 3, chest: 4, erase: 0 };
+        const gridContainer = document.getElementById('editor');
+        for (let y = 0; y < rows; y++) {
+            for (let x = 0; x < cols; x++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.x = x;
+                cell.dataset.y = y;
+                cell.dataset.type = 'erase';
+                cell.addEventListener('click', (event) => {
+                    cell.classList.remove('path', 'start', 'key', 'chest');
+                    if (selectedType !== 'erase') cell.classList.add(selectedType);
+                    cell.dataset.type = selectedType;
+
+                    saveLevel();
+                });
+                cell.addEventListener('mousemove', (event) => {
+                    if (event.buttons > 0) {
                         cell.classList.remove('path', 'start', 'key', 'chest');
                         if (selectedType !== 'erase') cell.classList.add(selectedType);
                         cell.dataset.type = selectedType;
-                    });
-                    cell.addEventListener('mousemove', (event) => {
-                        if (event.buttons > 0) {
-                            cell.classList.remove('path', 'start', 'key', 'chest');
-                            if (selectedType !== 'erase') cell.classList.add(selectedType);
-                            cell.dataset.type = selectedType;
-                        }
-                    });
-                    gridContainer.appendChild(cell);
+
+                        saveLevel();
+                    }
+                });
+                gridContainer.appendChild(cell);
+            }
+        }
+        document.addEventListener("keydown", (event) => {
+            switch (event.code) {
+                case "Digit5":
+                    selectedType = "erase";
+                    break;
+                case "Digit0":
+                    selectedType = "erase";
+                    break;
+                case "Digit1":
+                    selectedType = "path";
+                    break;
+                case "Digit2":
+                    selectedType = "start";
+                    break;
+                case "Digit3":
+                    selectedType = "key";
+                    break;
+                case "Digit4":
+                    selectedType = "chest";
+                    break;
+                case "ArrowLeft":
+                    previousLevel();
+                    break;
+                case "ArrowRight":
+                    nextLevel();
+                    break;
+            }
+        });
+        document.querySelectorAll('.palette button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                selectedType = btn.dataset.type;
+                document.querySelectorAll('.palette button').forEach(b => b.style.fontWeight = '');
+                btn.style.fontWeight = 'bold';
+            });
+        });
+        document.querySelector('.palette button[data-type="path"]').style.fontWeight = 'bold';
+
+        const codeValues = { 1: "path", 2: "start", 3: "key", 4: "chest", 0: "erase" };
+        let level = 0;
+
+        function loadLevel() {
+            const levelData = JSON.parse(document.getElementById('input').value)[level];
+
+            for (let y = 0; y < rows; y++) {
+                for (let x = 0; x < cols; x++) {
+                    const cell = document.querySelector(`.cell[data-x="${x}"][data-y="${y}"]`);
+                    cell.setAttribute("data-type", codeValues[levelData.layout[y][x]]);
+                    cell.classList.remove('path', 'start', 'key', 'chest');
+                    if (codeValues[levelData.layout[y][x]] !== 'erase') cell.classList.add(codeValues[levelData.layout[y][x]]);
                 }
             }
-            document.addEventListener("keydown", (event) => {
-                switch (event.code) {
-                    case "Digit5":
-                        selectedType = "erase";
-                        break;
-                    case "Digit0":
-                        selectedType = "erase";
-                        break;
-                    case "Digit1":
-                        selectedType = "path";
-                        break;
-                    case "Digit2":
-                        selectedType = "start";
-                        break;
-                    case "Digit3":
-                        selectedType = "key";
-                        break;
-                    case "Digit4":
-                        selectedType = "chest";
-                        break;
-                }
-            });
-            document.querySelectorAll('.palette button').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    selectedType = btn.dataset.type;
-                    document.querySelectorAll('.palette button').forEach(b => b.style.fontWeight = '');
-                    btn.style.fontWeight = 'bold';
+
+            if (levelData.startX >= 0 || levelData.startY >= 0) {
+                const cell = document.querySelector(`.cell[data-x="${levelData.startX}"][data-y="${levelData.startY}"]`);
+                cell.setAttribute("data-type", "start");
+                cell.classList.remove('path', 'start', 'key', 'chest');
+                cell.classList.add('start');
+            }
+        }
+
+        function saveLevels() {
+            const options = {
+                method: 'POST',
+                body: document.getElementById('input').value
+            };
+            fetch('/UPLOADLEVELS', options)
+                .then(response => response.json())
+                .then(response => {
+                    console.log("Uploaded");
                 });
-            });
-            document.querySelector('.palette button[data-type="path"]').style.fontWeight = 'bold';
-            document.getElementById('exportBtn').addEventListener('click', () => {
-                const json = {
-                    zoom: 0.5,
-                    startX: 0,
-                    startY: 0,
-                    keys: 0,
-                };
-                const array = [];
-                for (let y = 0; y < rows; y++) {
-                    const row = [];
-                    for (let x = 0; x < cols; x++) {
-                        const cell = document.querySelector(`.cell[data-x="${x}"][data-y="${y}"]`);
-                        if (codes[cell.dataset.type] == 2) {
-                            row.push(1);
-                            json.startX = x;
-                            json.startY = y;
-                        } else if (codes[cell.dataset.type] == 3) {
-                            row.push(3);
-                            json.keys++;
-                        }
-                        else {
-                            row.push(codes[cell.dataset.type] || 0);
-                        }
+        }
+
+        function saveLevel() {
+            const json = JSON.parse(document.getElementById('input').value);
+
+            const array = [];
+            for (let y = 0; y < rows; y++) {
+                const row = [];
+                for (let x = 0; x < cols; x++) {
+                    const cell = document.querySelector(`.cell[data-x="${x}"][data-y="${y}"]`);
+                    if (codes[cell.dataset.type] == 2) {
+                        row.push(1);
+                        json[level].startX = x;
+                        json[level].startY = y;
+                    } else if (codes[cell.dataset.type] == 3) {
+                        row.push(3);
                     }
-                    array.push(row);
+                    else {
+                        row.push(codes[cell.dataset.type] || 0);
+                    }
                 }
+                array.push(row);
+            }
 
-                json.layout = array;
+            json[level].layout = array;
+            document.getElementById('input').value = JSON.stringify(json);
+        }
 
-                document.getElementById('output').value = JSON.stringify(json);
-            });
-        })();
+        function nextLevel() {
+            if (level + 1 >= JSON.parse(document.getElementById('input').value).length) {
+                return;
+            }
+
+            saveLevel();
+
+            level++;
+            document.getElementById('level').textContent = "Selected Level: " + (level + 1);
+            loadLevel();
+        }
+
+        function previousLevel() {
+            if (level <= 0) {
+                return;
+            }
+
+            saveLevel();
+
+            level--;
+            document.getElementById('level').textContent = "Selected Level: " + (level + 1);
+            loadLevel();
+        }
+
+        function addLevel() {
+            const json = JSON.parse(document.getElementById('input').value);
+            json.push({ "zoom": 1, "startX": -1, "startY": -1, "keys": 0, "layout": [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]] });
+            document.getElementById('input').value = JSON.stringify(json);
+
+            level = JSON.parse(document.getElementById('input').value).length - 2;
+            nextLevel();
+        }
+
+        function removeLevel() {
+            if (level == 0) return;
+
+            const json = JSON.parse(document.getElementById('input').value);
+            json.splice(level, 1);
+            document.getElementById('input').value = JSON.stringify(json);
+
+            level--;
+            document.getElementById('level').textContent = "Selected Level: " + (level + 1);
+            loadLevel();
+        }
+
+        document.getElementById('exportBtn').addEventListener('click', () => {
+            const json = {
+                zoom: 1,
+                startX: 0,
+                startY: 0,
+                keys: 0,
+            };
+
+            const array = [];
+            for (let y = 0; y < rows; y++) {
+                const row = [];
+                for (let x = 0; x < cols; x++) {
+                    const cell = document.querySelector(`.cell[data-x="${x}"][data-y="${y}"]`);
+                    if (codes[cell.dataset.type] == 2) {
+                        row.push(1);
+                        json.startX = x;
+                        json.startY = y;
+                    } else if (codes[cell.dataset.type] == 3) {
+                        row.push(3);
+                        json.keys++;
+                    }
+                    else {
+                        row.push(codes[cell.dataset.type] || 0);
+                    }
+                }
+                array.push(row);
+            }
+
+            json.layout = array;
+
+            document.getElementById('output').value = JSON.stringify(json);
+        });
     </script>
 </body>
 

@@ -173,6 +173,11 @@ export default class Player {
     move(direction) {
         if (this.playerX == this.playerSpriteX && this.playerY == this.playerSpriteY) {
             if (direction === "up") {
+                if (this.levels.levelLayout[this.tileY][this.tileX] == 4) {
+                    this.playerDirection = "up";
+                    return;
+                }
+
                 if (this.levels.levelLayout[this.tileY - 1][this.tileX] == 1 || this.levels.levelLayout[this.tileY - 1][this.tileX] == 3) {
                     if (this.levels.levelLayout[this.tileY][this.tileX] == 1 || this.levels.levelLayout[this.tileY][this.tileX] == 3) {
                         this.levels.levelLayout[this.tileY][this.tileX] = 2;
@@ -194,9 +199,14 @@ export default class Player {
 
                     this.renderer.nextLevel();
                 } else {
-                    this.playerDirection = "up"
+                    this.playerDirection = "up";
                 }
             } else if (direction === "down") {
+                if (this.levels.levelLayout[this.tileY][this.tileX] == 4) {
+                    this.playerDirection = "down";
+                    return;
+                }
+
                 if (this.levels.levelLayout[this.tileY + 1][this.tileX] == 1 || this.levels.levelLayout[this.tileY + 1][this.tileX] == 3) {
                     if (this.levels.levelLayout[this.tileY][this.tileX] == 1 || this.levels.levelLayout[this.tileY][this.tileX] == 3) {
                         this.levels.levelLayout[this.tileY][this.tileX] = 2;
@@ -221,6 +231,11 @@ export default class Player {
                     this.playerDirection = "down"
                 }
             } else if (direction === "left") {
+                if (this.levels.levelLayout[this.tileY][this.tileX] == 4) {
+                    this.playerDirection = "left";
+                    return;
+                }
+
                 if (this.levels.levelLayout[this.tileY][this.tileX - 1] == 1 || this.levels.levelLayout[this.tileY][this.tileX - 1] == 3) {
                     if (this.levels.levelLayout[this.tileY][this.tileX] == 1 || this.levels.levelLayout[this.tileY][this.tileX] == 3) {
                         this.levels.levelLayout[this.tileY][this.tileX] = 2;
@@ -245,6 +260,11 @@ export default class Player {
                     this.playerDirection = "left"
                 }
             } else if (direction === "right") {
+                if (this.levels.levelLayout[this.tileY][this.tileX] == 4) {
+                    this.playerDirection = "right";
+                    return;
+                }
+
                 if (this.levels.levelLayout[this.tileY][this.tileX + 1] == 1 || this.levels.levelLayout[this.tileY][this.tileX + 1] == 3) {
                     if (this.levels.levelLayout[this.tileY][this.tileX] == 1 || this.levels.levelLayout[this.tileY][this.tileX] == 3) {
                         this.levels.levelLayout[this.tileY][this.tileX] = 2;

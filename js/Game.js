@@ -24,12 +24,16 @@ class Game {
             }
         });
 
+        // document.addEventListener("click", () => {
+        //     document.body.requestFullscreen();
+        // });
+
         this.closeButton = document.getElementById('close-button');
         this.closeButton?.addEventListener("click", () => {
             document.documentElement.style.setProperty('--menu-visible', 0);
         });
 
-        this.levels = new Levels();
+        this.levels = new Levels(this.canvas);
         this.input = new Input(this);
         this.player = new Player(this.levels, this.ctx, this.input);
         this.input.player = this.player;
@@ -46,7 +50,7 @@ class Game {
                     this.levels.level--;
                 }
 
-                document.documentElement.style.setProperty('--canvas-scale', (this.levels.levels[this.levels.level].zoom / window.devicePixelRatio).toString());
+                document.documentElement.style.setProperty('--canvas-scale', this.levels.getZoom(this.levels.level));
 
                 this.restart();
 
@@ -63,7 +67,7 @@ class Game {
                     this.levels.level++
                 }
 
-                document.documentElement.style.setProperty('--canvas-scale', (this.levels.levels[this.levels.level].zoom / window.devicePixelRatio).toString());
+                document.documentElement.style.setProperty('--canvas-scale', this.levels.getZoom(this.levels.level));
 
                 this.restart();
 
@@ -74,17 +78,30 @@ class Game {
         this.frame = -10;
         requestAnimationFrame(() => this.update());
 
-        document.documentElement.style.setProperty('--canvas-scale', (this.levels.levels[this.levels.level].zoom / window.devicePixelRatio).toString());
+        document.documentElement.style.setProperty('--canvas-scale', this.levels.getZoom(this.levels.level));
 
         setTimeout(() => {
             document.documentElement.style.setProperty('--scale-speed', '1s');
         }, 100,);
+
+        fetch('/js/levels.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("HTTP error " + response.status);
+                }
+
+                return response.json();
+            })
+            .then(json => {
+                this.levels.levels = json;
+            })
+            .catch(function (error) {
+                console.log("Failed to fetch levels");
+            })
     }
 
     update() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        // this.ctx.drawImage(this.renderer.images.level1, 0, 0);
-        // this.renderer.drawLevel();
         this.tiles.drawTiles();
         this.renderer.drawTiles();
 

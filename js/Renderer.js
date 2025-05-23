@@ -60,7 +60,7 @@ export default class Renderer {
                 if (this.levels.level >= this.levels.levels.length) {
                     this.levels.level = 0;
                 }
-                document.documentElement.style.setProperty('--canvas-scale', (this.levels.levels[this.levels.level].zoom / window.devicePixelRatio).toString());
+                document.documentElement.style.setProperty('--canvas-scale', this.levels.getZoom(this.levels.level));
                 this.game.restart();
             }
         }
