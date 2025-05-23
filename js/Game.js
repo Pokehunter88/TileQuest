@@ -50,9 +50,8 @@ class Game {
                     this.levels.level--;
                 }
 
-                document.documentElement.style.setProperty('--canvas-scale', this.levels.getZoom(this.levels.level));
-
                 this.restart();
+                document.documentElement.style.setProperty('--canvas-scale', this.levels.getZoom(this.levels.level));
 
                 document.documentElement.style.setProperty('--menu-visible', 0);
             }
@@ -67,9 +66,8 @@ class Game {
                     this.levels.level++
                 }
 
-                document.documentElement.style.setProperty('--canvas-scale', this.levels.getZoom(this.levels.level));
-
                 this.restart();
+                document.documentElement.style.setProperty('--canvas-scale', this.levels.getZoom(this.levels.level));
 
                 document.documentElement.style.setProperty('--menu-visible', 0);
             }
