@@ -7,19 +7,13 @@ export default class Renderer {
 
         this.images = {
             tiles: new Image(),
-            level1: new Image(),
             player: new Image(),
-            tile: new Image(),
-            brokenTile: new Image(),
-            keyTile: new Image(),
+            confetti: new Image(),
         }
 
         this.images.tiles.src = 'assets/Tile Sheet.png';
-        this.images.level1.src = 'assets/Level 1.png';
         this.images.player.src = 'assets/Player Sheet.png';
-        this.images.tile.src = 'assets/Tile.png';
-        this.images.brokenTile.src = 'assets/TileBroken.png';
-        this.images.keyTile.src = 'assets/TileKey.png';
+        this.images.confetti.src = 'assets/Confetti.png';
 
         this.finishAnimationFrame = 0;
         this.finishAnimation = false;
@@ -29,11 +23,11 @@ export default class Renderer {
         for (let y = 0; y < this.levels.levelLayout.length; y++) {
             for (let x = 0; x < this.levels.levelLayout[y].length; x++) {
                 if (this.levels.levelLayout[y][x] == 1 || this.levels.levelLayout[y][x] == 2) {
-                    this.ctx.drawImage(this.images.tile, x * 16, y * 16);
+                    this.ctx.drawImage(this.images.tiles, 0, 0, 16, 16, x * 16, y * 16, 16, 16);
                 } else if (this.levels.levelLayout[y][x] == 5) {
-                    this.ctx.drawImage(this.images.brokenTile, x * 16, y * 16);
+                    this.ctx.drawImage(this.images.tiles, 16, 0, 16, 16, x * 16, y * 16, 16, 16);
                 } else if (this.levels.levelLayout[y][x] == 3) {
-                    this.ctx.drawImage(this.images.keyTile, x * 16, y * 16);
+                    this.ctx.drawImage(this.images.tiles, 48, 0, 16, 16, x * 16, y * 16, 16, 16);
                 } else if (this.levels.levelLayout[y][x] == 4) {
                     this.ctx.drawImage(this.images.tiles, 32, 0, 16, 16, x * 16, y * 16, 16, 16);
                 }
@@ -46,6 +40,20 @@ export default class Renderer {
             this.ctx.fillStyle = "#1E1F3B";
             this.ctx.fillRect(0, 0, 192, 128 - frame);
             this.ctx.fillRect(0, 128 + frame, 192, 128 - frame);
+
+            // const width = 350;
+            // const height = 1000;
+
+            // const posX = -830 + frame * 3;
+            // // const posX = -850 + this.finishAnimationFrame * 3;
+            // const posY = -1000;
+
+            // this.ctx.save();
+            // this.ctx.translate(width, height);
+            // this.ctx.rotate((30 * Math.PI) / 180);
+            // // this.ctx.fillStyle = "red";
+            // this.ctx.fillRect(posX, posY, width, height);
+            // this.ctx.restore();
         }
 
         if (this.finishAnimation) {
@@ -53,7 +61,26 @@ export default class Renderer {
             this.ctx.fillRect(0, 0, 192, this.finishAnimationFrame);
             this.ctx.fillRect(0, 256 - this.finishAnimationFrame, 192, this.finishAnimationFrame);
 
+            // const width = 350;
+            // const height = 1000;
+
+            // const posX = -1150 + this.finishAnimationFrame * 3;
+            // const posY = -1000;
+
+            // this.ctx.save();
+            // this.ctx.translate(width, height);
+            // this.ctx.rotate((30 * Math.PI) / 180);
+            // this.ctx.fillRect(posX, posY, width, height);
+            // this.ctx.restore();
+
             this.finishAnimationFrame++;
+
+            for (let i = 0; i < 10; i++) {
+                if (this.finishAnimationFrame > 20 && this.finishAnimationFrame < 25 + (i * 5)) {
+                    this.ctx.drawImage(this.images.confetti, i * 48, 0, 48, 48, (this.player.tileX * 16) - 16, (this.player.tileY * 16) - 20, 48, 48);
+                    break;
+                }
+            }
 
             if (this.finishAnimationFrame > 128) {
                 this.levels.level++;

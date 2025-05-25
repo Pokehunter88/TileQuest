@@ -37,6 +37,13 @@ export default class Input {
             this.keysPressed.a = true;
         } else if (event.code === "KeyD" || event.code === "ArrowRight") {
             this.keysPressed.d = true;
+        } else if (event.code === "KeyF") {
+            this.game.ctx.save();
+            this.game.ctx.rotate(10*Math.PI/180);
+        } else if (event.code === "KeyG") {
+            this.game.ctx.rotate(-10*Math.PI/180);
+        } else if (event.code === "KeyV") {
+            this.game.ctx.translate(-10, -10);
         }
     }
 
