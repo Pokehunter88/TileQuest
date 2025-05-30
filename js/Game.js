@@ -138,6 +138,7 @@ class Game {
                     })
                     .catch(function (error) {
                         console.log("Failed to fetch levels 2");
+                        console.log(error);
                     });
             });
     }
