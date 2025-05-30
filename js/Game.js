@@ -122,7 +122,23 @@ class Game {
                 this.levels.levels = json;
             })
             .catch(function (error) {
-                console.log("Failed to fetch levels");
+                console.log("Failed to fetch levels 1");
+                fetch(
+                    "https://raw.githubusercontent.com/Pokehunter88/TileQuest/refs/heads/main/js/levels.json"
+                )
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error("HTTP error " + response.status);
+                        }
+
+                        return response.json();
+                    })
+                    .then((json) => {
+                        this.levels.levels = json;
+                    })
+                    .catch(function (error) {
+                        console.log("Failed to fetch levels 2");
+                    });
             });
     }
 
