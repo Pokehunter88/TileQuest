@@ -1,26 +1,36 @@
-import CanvasManager from './CanvasManager.js';
-import Player from './Player.js';
-import Levels from './Levels.js';
-import Renderer from './Renderer.js';
-import Input from './Input.js';
-import Tiles from './Tiles.js';
+import CanvasManager from "./CanvasManager.js";
+import Player from "./Player.js";
+import Levels from "./Levels.js";
+import Renderer from "./Renderer.js";
+import Input from "./Input.js";
+import Tiles from "./Tiles.js";
 
 class Game {
     static instance;
     constructor() {
         Game.instance = this;
-        this.canvas = document.getElementById('canvas1');
+        this.canvas = document.getElementById("canvas1");
         this.ctx = new CanvasManager(this.canvas, 192, 256);
 
-        this.restartButton = document.getElementById('restart');
+        this.restartButton = document.getElementById("restart");
         this.restartButton?.addEventListener("click", () => this.restart());
 
-        this.menuButton = document.getElementById('menu-button');
+        this.menuButton = document.getElementById("menu-button");
         this.menuButton?.addEventListener("click", () => {
-            if (document.documentElement.style.getPropertyValue('--menu-visible') == 0 || document.documentElement.style.getPropertyValue('--menu-visible') === "") {
-                document.documentElement.style.setProperty('--menu-visible', 100);
+            if (
+                document.documentElement.style.getPropertyValue(
+                    "--menu-visible"
+                ) == 0 ||
+                document.documentElement.style.getPropertyValue(
+                    "--menu-visible"
+                ) === ""
+            ) {
+                document.documentElement.style.setProperty(
+                    "--menu-visible",
+                    100
+                );
             } else {
-                document.documentElement.style.setProperty('--menu-visible', 0);
+                document.documentElement.style.setProperty("--menu-visible", 0);
             }
         });
 
@@ -28,9 +38,9 @@ class Game {
         //     document.body.requestFullscreen();
         // });
 
-        this.closeButton = document.getElementById('close-button');
+        this.closeButton = document.getElementById("close-button");
         this.closeButton?.addEventListener("click", () => {
-            document.documentElement.style.setProperty('--menu-visible', 0);
+            document.documentElement.style.setProperty("--menu-visible", 0);
         });
 
         this.levels = new Levels(this.canvas);
@@ -41,9 +51,13 @@ class Game {
         this.player.renderer = this.renderer;
         this.tiles = new Tiles(this.levels, this.ctx, this.renderer);
 
-        this.leftButton = document.getElementById('menu-left');
+        this.leftButton = document.getElementById("menu-left");
         this.leftButton?.addEventListener("click", () => {
-            if (document.documentElement.style.getPropertyValue('--menu-visible') == 100) {
+            if (
+                document.documentElement.style.getPropertyValue(
+                    "--menu-visible"
+                ) == 100
+            ) {
                 if (this.levels.level == 0) {
                     this.levels.level = this.levels.levels.length - 1;
                 } else {
@@ -51,62 +65,81 @@ class Game {
                 }
 
                 this.restart();
-                document.documentElement.style.setProperty('--canvas-scale', this.levels.getZoom(this.levels.level));
+                document.documentElement.style.setProperty(
+                    "--canvas-scale",
+                    this.levels.getZoom(this.levels.level)
+                );
 
-                document.documentElement.style.setProperty('--menu-visible', 0);
+                document.documentElement.style.setProperty("--menu-visible", 0);
             }
         });
 
-        this.rightButton = document.getElementById('menu-right');
+        this.rightButton = document.getElementById("menu-right");
         this.rightButton?.addEventListener("click", () => {
-            if (document.documentElement.style.getPropertyValue('--menu-visible') == 100) {
+            if (
+                document.documentElement.style.getPropertyValue(
+                    "--menu-visible"
+                ) == 100
+            ) {
                 if (this.levels.level + 1 >= this.levels.levels.length) {
                     this.levels.level = 0;
                 } else {
-                    this.levels.level++
+                    this.levels.level++;
                 }
 
                 this.restart();
-                document.documentElement.style.setProperty('--canvas-scale', this.levels.getZoom(this.levels.level));
+                document.documentElement.style.setProperty(
+                    "--canvas-scale",
+                    this.levels.getZoom(this.levels.level)
+                );
 
-                document.documentElement.style.setProperty('--menu-visible', 0);
+                document.documentElement.style.setProperty("--menu-visible", 0);
             }
         });
 
         this.frame = -10;
+        this.lastFrame = Date.now();
         requestAnimationFrame(() => this.update());
 
-        document.documentElement.style.setProperty('--canvas-scale', this.levels.getZoom(this.levels.level));
+        document.documentElement.style.setProperty(
+            "--canvas-scale",
+            this.levels.getZoom(this.levels.level)
+        );
 
         setTimeout(() => {
-            document.documentElement.style.setProperty('--scale-speed', '1s');
-        }, 100,);
+            document.documentElement.style.setProperty("--scale-speed", "1s");
+        }, 100);
 
-        fetch('/js/levels.json')
-            .then(response => {
+        fetch("/js/levels.json")
+            .then((response) => {
                 if (!response.ok) {
                     throw new Error("HTTP error " + response.status);
                 }
 
                 return response.json();
             })
-            .then(json => {
+            .then((json) => {
                 this.levels.levels = json;
             })
             .catch(function (error) {
                 console.log("Failed to fetch levels");
-            })
+            });
     }
 
     update() {
+        // console.log(`Time elapsed: ${(Date.now() - this.lastFrame)/1000} ms`);
+        const delta = (Date.now() - this.lastFrame) / 1000;
+
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.tiles.drawTiles();
         this.renderer.drawTiles();
 
         this.frame++;
-        this.player.update(this.frame);
+        this.player.update(delta);
 
-        this.renderer.update(this.frame);
+        this.renderer.update(this.frame, delta);
+
+        this.lastFrame = Date.now();
 
         requestAnimationFrame(() => this.update());
     }
@@ -119,6 +152,6 @@ class Game {
     }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => new Game(), 100);
 });
