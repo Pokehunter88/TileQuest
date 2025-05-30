@@ -15,9 +15,6 @@ export default class Renderer {
         this.images.player.src = "assets/Player Sheet.png";
         this.images.confetti.src = "assets/Confetti.png";
 
-        this.finishAnimationFrame = 0;
-        this.finishAnimation = false;
-
         this.animationLength = 1;
 
         this.timers = {

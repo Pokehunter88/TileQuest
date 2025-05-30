@@ -97,7 +97,6 @@ class Game {
             }
         });
 
-        this.frame = -10;
         this.lastFrame = Date.now();
         requestAnimationFrame(() => this.update());
 
@@ -146,17 +145,15 @@ class Game {
     }
 
     update() {
-        // console.log(`Time elapsed: ${(Date.now() - this.lastFrame)/1000} ms`);
         const delta = (Date.now() - this.lastFrame) / 1000;
 
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.tiles.drawTiles();
         this.renderer.drawTiles();
 
-        this.frame++;
         this.player.update(delta);
 
-        this.renderer.update(this.frame, delta);
+        this.renderer.update(delta);
 
         this.lastFrame = Date.now();
 
@@ -164,7 +161,6 @@ class Game {
     }
 
     restart() {
-        this.frame = -10;
         this.player.restart();
         this.levels.restart();
         this.renderer.restart();
