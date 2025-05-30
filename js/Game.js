@@ -110,6 +110,8 @@ class Game {
             document.documentElement.style.setProperty("--scale-speed", "1s");
         }, 100);
 
+        const levelsToChange = this.levels;
+
         fetch("/js/levels.json")
             .then((response) => {
                 if (!response.ok) {
@@ -119,7 +121,7 @@ class Game {
                 return response.json();
             })
             .then((json) => {
-                this.levels.levels = json;
+                levelsToChange.levels = json;
             })
             .catch(function (error) {
                 console.log("Failed to fetch levels 1");
@@ -134,7 +136,7 @@ class Game {
                         return response.json();
                     })
                     .then((json) => {
-                        this.levels.levels = json;
+                        levelsToChange.levels = json;
                     })
                     .catch(function (error) {
                         console.log("Failed to fetch levels 2");
