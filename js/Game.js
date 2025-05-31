@@ -148,11 +148,11 @@ class Game {
         const delta = (Date.now() - this.lastFrame) / 1000;
 
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fillStyle = "#1E1F3B";
+        this.ctx.fillRect(0, 0, 192, 256);
+
         this.tiles.drawTiles();
-        this.renderer.drawTiles();
-
         this.player.update(delta);
-
         this.renderer.update(delta);
 
         this.lastFrame = Date.now();

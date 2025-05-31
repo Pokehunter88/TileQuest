@@ -1,3 +1,5 @@
+import BrokenTile from "./BrokenTile.js";
+
 export default class Player {
     constructor(levels, ctx, input) {
         this.levels = levels;
@@ -27,9 +29,15 @@ export default class Player {
             idle: 0,
             walk: 0,
         };
+
+        this.brokenTiles = [];
     }
 
     update(delta) {
+        for (let i = 0; i < this.brokenTiles.length; i++) {
+            this.brokenTiles[i].update(delta);
+        }
+
         if (this.timers.idle > 0.5) {
             this.playerIdleState = !this.playerIdleState;
             this.timers.idle = 0;
@@ -395,12 +403,20 @@ export default class Player {
                 if (this.levels.levelLayout[y][x] == 2) {
                     if (this.playerSpriteY >= y * 16 + 10) {
                         this.levels.levelLayout[y][x] = 5;
+
+                        this.brokenTiles.push(new BrokenTile(this.ctx, x, y));
                     } else if (this.playerSpriteY <= y * 16 - 10) {
                         this.levels.levelLayout[y][x] = 5;
+
+                        this.brokenTiles.push(new BrokenTile(this.ctx, x, y));
                     } else if (this.playerSpriteX >= x * 16 + 10) {
                         this.levels.levelLayout[y][x] = 5;
+
+                        this.brokenTiles.push(new BrokenTile(this.ctx, x, y));
                     } else if (this.playerSpriteX <= x * 16 - 10) {
                         this.levels.levelLayout[y][x] = 5;
+
+                        this.brokenTiles.push(new BrokenTile(this.ctx, x, y));
                     }
                 }
             }
@@ -604,5 +620,7 @@ export default class Player {
 
         this.tileX = this.levels.levels[this.levels.level].startX;
         this.tileY = this.levels.levels[this.levels.level].startY;
+
+        this.brokenTiles = [];
     }
 }

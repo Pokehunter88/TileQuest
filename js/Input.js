@@ -7,7 +7,7 @@ export default class Input {
             w: false,
             s: false,
             a: false,
-            d: false
+            d: false,
         };
 
         document.addEventListener("keydown", (event) => this.keyDown(event));
@@ -16,18 +16,32 @@ export default class Input {
         this.startX;
         this.startY;
 
-        document.addEventListener('touchstart', (event) => this.touchStart(event));
-        document.addEventListener('touchmove', (event) => this.touchMove(event));
+        document.addEventListener("touchstart", (event) =>
+            this.touchStart(event)
+        );
+        document.addEventListener("touchmove", (event) =>
+            this.touchMove(event)
+        );
     }
 
     keyDown(event) {
         if (event.code === "KeyR") {
             this.game.restart();
         } else if (event.code === "Escape") {
-            if (document.documentElement.style.getPropertyValue('--menu-visible') == 0 || document.documentElement.style.getPropertyValue('--menu-visible') === "") {
-                document.documentElement.style.setProperty('--menu-visible', 100);
+            if (
+                document.documentElement.style.getPropertyValue(
+                    "--menu-visible"
+                ) == 0 ||
+                document.documentElement.style.getPropertyValue(
+                    "--menu-visible"
+                ) === ""
+            ) {
+                document.documentElement.style.setProperty(
+                    "--menu-visible",
+                    100
+                );
             } else {
-                document.documentElement.style.setProperty('--menu-visible', 0);
+                document.documentElement.style.setProperty("--menu-visible", 0);
             }
         } else if (event.code === "KeyW" || event.code === "ArrowUp") {
             this.keysPressed.w = true;
@@ -38,12 +52,26 @@ export default class Input {
         } else if (event.code === "KeyD" || event.code === "ArrowRight") {
             this.keysPressed.d = true;
         } else if (event.code === "KeyF") {
-            this.game.ctx.save();
-            this.game.ctx.rotate(10*Math.PI/180);
-        } else if (event.code === "KeyG") {
-            this.game.ctx.rotate(-10*Math.PI/180);
-        } else if (event.code === "KeyV") {
-            this.game.ctx.translate(-10, -10);
+            const imgData = this.game.ctx.getImageData(
+                0,
+                0,
+                this.game.canvas.width,
+                this.game.canvas.height
+            );
+            const data = imgData.data;
+
+            for (let i = 0; i < data.length; i += 4) {
+                const red = data[i];
+                const green = data[i + 1];
+                const blue = data[i + 2];
+                const alpha = data[i + 3];
+
+                data[i] = 255;
+            }
+
+            this.game.ctx.putImageData(imgData, 0, 0);
+
+            // console.log(data);
         }
     }
 
@@ -72,7 +100,10 @@ export default class Input {
 
         // Check if it's a swipe (minimal distance threshold)
         const swipeThreshold = 50;
-        if (Math.abs(deltaX) > swipeThreshold || Math.abs(deltaY) > swipeThreshold) {
+        if (
+            Math.abs(deltaX) > swipeThreshold ||
+            Math.abs(deltaY) > swipeThreshold
+        ) {
             // Determine swipe direction
             if (Math.abs(deltaX) > Math.abs(deltaY)) {
                 // Horizontal swipe

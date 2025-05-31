@@ -8,86 +8,52 @@ export default class Renderer {
         this.images = {
             tiles: new Image(),
             player: new Image(),
-            confetti: new Image(),
+            collect: new Image(),
+            lighting: new Image(),
+            key: new Image(),
         };
 
         this.images.tiles.src = "assets/Tile Sheet.png";
         this.images.player.src = "assets/Player Sheet.png";
-        this.images.confetti.src = "assets/Confetti.png";
+        this.images.collect.src = "assets/Collect.png";
+        this.images.lighting.src = "assets/Lighting.png";
+        this.images.key.src = "assets/KeySheet.png";
 
         this.animationLength = 1;
 
         this.timers = {
             start: 0,
             finish: this.animationLength,
+            key: 0,
         };
     }
 
-    drawTiles() {
-        for (let y = 0; y < this.levels.levelLayout.length; y++) {
-            for (let x = 0; x < this.levels.levelLayout[y].length; x++) {
-                if (
-                    this.levels.levelLayout[y][x] == 1 ||
-                    this.levels.levelLayout[y][x] == 2
-                ) {
-                    this.ctx.drawImage(
-                        this.images.tiles,
-                        0,
-                        0,
-                        16,
-                        16,
-                        x * 16,
-                        y * 16,
-                        16,
-                        16
-                    );
-                } else if (this.levels.levelLayout[y][x] == 5) {
-                    this.ctx.drawImage(
-                        this.images.tiles,
-                        16,
-                        0,
-                        16,
-                        16,
-                        x * 16,
-                        y * 16,
-                        16,
-                        16
-                    );
-                } else if (this.levels.levelLayout[y][x] == 3) {
-                    this.ctx.drawImage(
-                        this.images.tiles,
-                        48,
-                        0,
-                        16,
-                        16,
-                        x * 16,
-                        y * 16,
-                        16,
-                        16
-                    );
-                } else if (this.levels.levelLayout[y][x] == 4) {
-                    this.ctx.drawImage(
-                        this.images.tiles,
-                        32,
-                        0,
-                        16,
-                        16,
-                        x * 16,
-                        y * 16,
-                        16,
-                        16
-                    );
-                }
-            }
+    update(delta) {
+        this.drawLighting();
+        this.startAnimation(delta);
+        this.endAnimation(delta);
+
+        this.timers.key += delta;
+
+        if (this.timers.key > Math.PI) {
+            this.timers.key = 0;
         }
     }
 
-    update(delta) {
+    drawLighting() {
+        this.ctx.drawImage(
+            this.images.lighting,
+            this.player.playerSpriteX - 216,
+            this.player.playerSpriteY - 220,
+        );
+    }
+
+    startAnimation(delta) {
         if (
             this.timers.start < this.animationLength &&
             this.timers.end >= this.animationLength
         ) {
-            this.ctx.fillStyle = "#1E1F3B";
+            this.ctx.fillStyle = "#0f0f1d";
             this.ctx.fillRect(
                 0,
                 0,
@@ -102,8 +68,34 @@ export default class Renderer {
             );
         }
 
+        if (this.timers.start < this.animationLength) {
+            this.timers.start += delta;
+        }
+    }
+
+    endAnimation(delta) {
         if (this.timers.end < this.animationLength) {
-            this.ctx.fillStyle = "#1E1F3B";
+            for (let i = 0; i < 15; i++) {
+                if (
+                    this.timers.end > 0.2 &&
+                    this.timers.end < (this.animationLength / 40) * i + 0.2
+                ) {
+                    this.ctx.drawImage(
+                        this.images.collect,
+                        i * 48,
+                        0,
+                        48,
+                        48,
+                        this.player.tileX * 16 - 16,
+                        this.player.tileY * 16 - 20,
+                        48,
+                        48
+                    );
+                    break;
+                }
+            }
+
+            this.ctx.fillStyle = "#0f0f1d";
             this.ctx.fillRect(
                 0,
                 0,
@@ -116,31 +108,8 @@ export default class Renderer {
                 192,
                 (this.timers.end / this.animationLength) * 128
             );
-
-            // for (let i = 0; i < 10; i++) {
-            //     if (
-            //         this.finishAnimationFrame > 20 &&
-            //         this.finishAnimationFrame < 25 + i * 5
-            //     ) {
-            //         this.ctx.drawImage(
-            //             this.images.confetti,
-            //             i * 48,
-            //             0,
-            //             48,
-            //             48,
-            //             this.player.tileX * 16 - 16,
-            //             this.player.tileY * 16 - 20,
-            //             48,
-            //             48
-            //         );
-            //         break;
-            //     }
-            // }
         }
 
-        if (this.timers.start < this.animationLength) {
-            this.timers.start += delta;
-        }
         if (this.timers.end < this.animationLength) {
             this.timers.end += delta;
 

@@ -13,7 +13,7 @@ export default class Tiles {
                     [0, 1, 0, 0, 0],
                     [0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0],
-                ]
+                ],
             },
             {
                 x: 48,
@@ -23,7 +23,7 @@ export default class Tiles {
                     [0, 0, 0, 0, 0],
                     [0, 1, 0, 0, 0],
                     [0, 0, 0, 0, 0],
-                ]
+                ],
             },
             {
                 x: 32,
@@ -33,7 +33,7 @@ export default class Tiles {
                     [0, 0, 0, 1, 0],
                     [0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0],
-                ]
+                ],
             },
             {
                 x: 48,
@@ -43,7 +43,7 @@ export default class Tiles {
                     [0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0],
-                ]
+                ],
             },
             {
                 x: 32,
@@ -53,7 +53,7 @@ export default class Tiles {
                     [0, 0, 0, 0, 0],
                     [0, 0, 0, 1, 0],
                     [0, 0, 0, 0, 0],
-                ]
+                ],
             },
             {
                 x: 16,
@@ -63,7 +63,7 @@ export default class Tiles {
                     [0, 0, 0, 0, 0],
                     [0, 0, 1, 0, 0],
                     [0, 0, 0, 0, 0],
-                ]
+                ],
             },
             {
                 x: 32,
@@ -73,7 +73,7 @@ export default class Tiles {
                     [0, 0, 0, 0, 0],
                     [0, 0, 2, 0, 0],
                     [0, 0, 1, 0, 0],
-                ]
+                ],
             },
             {
                 x: 0,
@@ -83,7 +83,7 @@ export default class Tiles {
                     [0, 0, 0, 0, 0],
                     [0, 0, 2, 2, 0],
                     [0, 0, 2, 1, 0],
-                ]
+                ],
             },
             {
                 x: 16,
@@ -93,7 +93,7 @@ export default class Tiles {
                     [0, 0, 0, 0, 0],
                     [0, 2, 2, 0, 0],
                     [0, 1, 2, 0, 0],
-                ]
+                ],
             },
             {
                 x: 0,
@@ -103,7 +103,7 @@ export default class Tiles {
                     [0, 0, 0, 2, 0],
                     [0, 0, 2, 0, 0],
                     [0, 0, 0, 0, 0],
-                ]
+                ],
             },
             {
                 x: 16,
@@ -113,7 +113,7 @@ export default class Tiles {
                     [0, 2, 0, 0, 0],
                     [0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0],
-                ]
+                ],
             },
             {
                 x: 80,
@@ -123,7 +123,7 @@ export default class Tiles {
                     [0, 0, 0, 0, 0],
                     [0, 0, 2, 1, 0],
                     [0, 0, 1, 1, 0],
-                ]
+                ],
             },
             {
                 x: 64,
@@ -133,7 +133,7 @@ export default class Tiles {
                     [0, 0, 0, 0, 0],
                     [0, 1, 2, 0, 0],
                     [0, 1, 1, 0, 0],
-                ]
+                ],
             },
             {
                 x: 80,
@@ -143,7 +143,7 @@ export default class Tiles {
                     [0, 0, 0, 1, 0],
                     [0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0],
-                ]
+                ],
             },
             {
                 x: 64,
@@ -153,7 +153,7 @@ export default class Tiles {
                     [0, 1, 0, 0, 0],
                     [0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0],
-                ]
+                ],
             },
             {
                 x: 96,
@@ -163,7 +163,7 @@ export default class Tiles {
                     [0, 1, 0, 0, 0],
                     [0, 0, 1, 0, 0],
                     [0, 0, 0, 0, 0],
-                ]
+                ],
             },
             {
                 x: 96,
@@ -173,7 +173,7 @@ export default class Tiles {
                     [0, 1, 0, 0, 0],
                     [0, 0, 0, 0, 0],
                     [0, 0, 1, 0, 0],
-                ]
+                ],
             },
             {
                 x: 96,
@@ -183,7 +183,7 @@ export default class Tiles {
                     [0, 0, 0, 0, 0],
                     [0, 1, 0, 0, 0],
                     [0, 0, 1, 0, 0],
-                ]
+                ],
             },
             {
                 x: 112,
@@ -193,7 +193,7 @@ export default class Tiles {
                     [0, 0, 0, 1, 0],
                     [0, 0, 1, 0, 0],
                     [0, 0, 0, 0, 0],
-                ]
+                ],
             },
             {
                 x: 112,
@@ -203,7 +203,7 @@ export default class Tiles {
                     [0, 0, 0, 1, 0],
                     [0, 0, 0, 0, 0],
                     [0, 0, 1, 0, 0],
-                ]
+                ],
             },
             {
                 x: 80,
@@ -213,7 +213,7 @@ export default class Tiles {
                     [0, 2, 0, 2, 0],
                     [0, 0, 0, 0, 0],
                     [0, 0, 1, 0, 0],
-                ]
+                ],
             },
             {
                 x: 128,
@@ -223,9 +223,9 @@ export default class Tiles {
                     [0, 1, 0, 1, 0],
                     [0, 0, 1, 0, 0],
                     [0, 0, 0, 0, 0],
-                ]
+                ],
             },
-        ]
+        ];
     }
 
     tileMatches(val, ty, tx, layout) {
@@ -236,7 +236,6 @@ export default class Tiles {
         if (val === 2) return cell === undefined || cell === 0;
         return false;
     }
-
 
     drawTiles() {
         const layout = this.levels.levelLayout;
@@ -253,18 +252,121 @@ export default class Tiles {
                                 const val = grid[i][j];
                                 const ty = y + (i - 1);
                                 const tx = x + (j - 2);
-                                if (!this.tileMatches(val, ty, tx, layout)) ok = false;
+                                if (!this.tileMatches(val, ty, tx, layout))
+                                    ok = false;
                             }
                         }
 
                         if (ok) {
-                            this.ctx.drawImage(this.renderer.images.tiles, this.rules[i].x, this.rules[i].y + 0.05, 15.95, 15.95, x * 16, y * 16, 16, 16);
+                            this.ctx.drawImage(
+                                this.renderer.images.tiles,
+                                this.rules[i].x,
+                                this.rules[i].y + 0.05,
+                                15.95,
+                                15.95,
+                                x * 16,
+                                y * 16,
+                                16,
+                                16
+                            );
                         }
                     }
                 }
             }
         }
 
-        this.ctx.drawImage(this.renderer.images.tiles, 0, 16.05, 15.95, 15.95, this.levels.levels[this.levels.level].startX * 16, (this.levels.levels[this.levels.level].startY - 1) * 16, 16, 16);
+        this.ctx.drawImage(
+            this.renderer.images.tiles,
+            0,
+            16.05,
+            15.95,
+            15.95,
+            this.levels.levels[this.levels.level].startX * 16,
+            (this.levels.levels[this.levels.level].startY - 1) * 16,
+            16,
+            16
+        );
+
+        this.drawWalkingTiles();
+    }
+
+    drawWalkingTiles() {
+        for (let y = 0; y < this.levels.levelLayout.length; y++) {
+            for (let x = 0; x < this.levels.levelLayout[y].length; x++) {
+                if (
+                    this.levels.levelLayout[y][x] == 1 ||
+                    this.levels.levelLayout[y][x] == 2
+                ) {
+                    this.ctx.drawImage(
+                        this.renderer.images.tiles,
+                        0,
+                        0,
+                        16,
+                        16,
+                        x * 16,
+                        y * 16,
+                        16,
+                        16
+                    );
+                } else if (this.levels.levelLayout[y][x] == 3) {
+                    this.ctx.drawImage(
+                        this.renderer.images.tiles,
+                        0,
+                        0,
+                        16,
+                        16,
+                        x * 16,
+                        y * 16,
+                        16,
+                        16
+                    );
+
+                    for (let i = 0; i < 6; i++) {
+                        if (
+                            this.renderer.timers.key > i * 0.1 &&
+                            this.renderer.timers.key < 0.7
+                        ) {
+                            this.ctx.drawImage(
+                                this.renderer.images.key,
+                                i * 16 + 16,
+                                0,
+                                16,
+                                16,
+                                x * 16,
+                                y * 16 + Math.sin(this.renderer.timers.key * 2),
+                                16,
+                                16
+                            );
+                        }
+                    }
+
+                    if (this.renderer.timers.key >= 0.7) {
+                        this.ctx.drawImage(
+                            this.renderer.images.key,
+                            0,
+                            0,
+                            16,
+                            16,
+                            x * 16,
+                            y * 16 + Math.sin(this.renderer.timers.key * 2),
+                            16,
+                            16
+                        );
+                    }
+                } else if (this.levels.levelLayout[y][x] == 4) {
+                    this.ctx.drawImage(
+                        this.renderer.images.tiles,
+                        32,
+                        0,
+                        16,
+                        16,
+                        x * 16,
+                        y * 16,
+                        16,
+                        16
+                    );
+                }
+            }
+        }
     }
 }
