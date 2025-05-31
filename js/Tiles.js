@@ -321,6 +321,18 @@ export default class Tiles {
                         16
                     );
 
+                    this.ctx.drawImage(
+                        this.renderer.images.key,
+                        0,
+                        0,
+                        16,
+                        16,
+                        x * 16,
+                        y * 16 + Math.sin(this.renderer.timers.key * 2),
+                        16,
+                        16
+                    );
+
                     for (let i = 0; i < 6; i++) {
                         if (
                             this.renderer.timers.key > i * 0.1 &&
@@ -338,20 +350,6 @@ export default class Tiles {
                                 16
                             );
                         }
-                    }
-
-                    if (this.renderer.timers.key >= 0.7) {
-                        this.ctx.drawImage(
-                            this.renderer.images.key,
-                            0,
-                            0,
-                            16,
-                            16,
-                            x * 16,
-                            y * 16 + Math.sin(this.renderer.timers.key * 2),
-                            16,
-                            16
-                        );
                     }
                 } else if (this.levels.levelLayout[y][x] == 4) {
                     this.ctx.drawImage(
