@@ -2,6 +2,7 @@
     --canvas-scale: 0.1;
     --scale-speed: 0.4s;
     --menu-visible: 0;
+    --ui-visible: 0;
 }
 
 #canvas1 {
@@ -12,7 +13,7 @@
     left: 50%;
     /* transform: translate(-50%, -50%) scale(var(--canvas-scale)); */
     transform: translate(-50%, -50%);
-    transition: transform var(--scale-speed) ease;
+    /* transition: transform var(--scale-speed) ease; */
     image-rendering: pixelated;
     user-select: none;
 }
@@ -42,6 +43,9 @@
     z-index: 3;
     overflow: hidden;
     user-select: none;
+
+    transition: opacity 0.1s ease-in;
+    opacity: var(--ui-visible);
 }
 
 #menu-button {
@@ -57,6 +61,9 @@
     z-index: 3;
     overflow: hidden;
     user-select: none;
+
+    transition: opacity 0.1s ease-in;
+    opacity: var(--ui-visible);
 }
 
 #menu-container {

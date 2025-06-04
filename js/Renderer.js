@@ -6,6 +6,9 @@ export default class Renderer {
         this.game = game;
 
         this.images = {
+            startScreen: new Image(),
+            restartMenu: new Image(),
+            pauseMenu: new Image(),
             tiles: new Image(),
             player: new Image(),
             collect: new Image(),
@@ -13,6 +16,9 @@ export default class Renderer {
             key: new Image(),
         };
 
+        this.images.startScreen.src = "assets/Start Screen.png";
+        this.images.restartMenu.src = "assets/Restart Menu.png";
+        this.images.pauseMenu.src = "assets/Pause Menu.png";
         this.images.tiles.src = "assets/Tile Sheet.png";
         this.images.player.src = "assets/Player Sheet.png";
         this.images.collect.src = "assets/Collect.png";
@@ -23,7 +29,7 @@ export default class Renderer {
 
         this.timers = {
             start: 0,
-            finish: this.animationLength,
+            end: this.animationLength,
             key: 0,
         };
     }

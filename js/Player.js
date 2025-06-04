@@ -1,7 +1,8 @@
 import BrokenTile from "./BrokenTile.js";
 
 export default class Player {
-    constructor(levels, ctx, input) {
+    constructor(game, levels, ctx, input) {
+        this.game = game;
         this.levels = levels;
         this.ctx = ctx;
         this.input = input;
@@ -427,6 +428,8 @@ export default class Player {
     }
 
     move(direction) {
+        if (this.game.pauseMenu.showing) return;
+
         if (
             this.playerX == this.playerSpriteX &&
             this.playerY == this.playerSpriteY

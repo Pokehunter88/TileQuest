@@ -8,6 +8,7 @@ export default class Input {
             s: false,
             a: false,
             d: false,
+            space: false,
         };
 
         document.addEventListener("keydown", (event) => this.keyDown(event));
@@ -28,20 +29,12 @@ export default class Input {
         if (event.code === "KeyR") {
             this.game.restart();
         } else if (event.code === "Escape") {
-            if (
-                document.documentElement.style.getPropertyValue(
-                    "--menu-visible"
-                ) == 0 ||
-                document.documentElement.style.getPropertyValue(
-                    "--menu-visible"
-                ) === ""
-            ) {
-                document.documentElement.style.setProperty(
-                    "--menu-visible",
-                    100
-                );
-            } else {
-                document.documentElement.style.setProperty("--menu-visible", 0);
+            if (this.game.playing) {
+                this.game.pauseMenu.showing = !this.game.pauseMenu.showing;
+
+                if (this.game.pauseMenu.showing) {
+                    this.game.pauseMenu.selected = 0;
+                }
             }
         } else if (event.code === "KeyW" || event.code === "ArrowUp") {
             this.keysPressed.w = true;
@@ -51,27 +44,8 @@ export default class Input {
             this.keysPressed.a = true;
         } else if (event.code === "KeyD" || event.code === "ArrowRight") {
             this.keysPressed.d = true;
-        } else if (event.code === "KeyF") {
-            const imgData = this.game.ctx.getImageData(
-                0,
-                0,
-                this.game.canvas.width,
-                this.game.canvas.height
-            );
-            const data = imgData.data;
-
-            for (let i = 0; i < data.length; i += 4) {
-                const red = data[i];
-                const green = data[i + 1];
-                const blue = data[i + 2];
-                const alpha = data[i + 3];
-
-                data[i] = 255;
-            }
-
-            this.game.ctx.putImageData(imgData, 0, 0);
-
-            // console.log(data);
+        } else if (event.code === "Space" || event.code === "Enter") {
+            this.keysPressed.space = true;
         }
     }
 
@@ -84,6 +58,8 @@ export default class Input {
             this.keysPressed.a = false;
         } else if (event.code === "KeyD" || event.code === "ArrowRight") {
             this.keysPressed.d = false;
+        } else if (event.code === "Space" || event.code === "Enter") {
+            this.keysPressed.space = false;
         }
     }
 
@@ -93,31 +69,27 @@ export default class Input {
     }
 
     touchMove(event) {
-        const endX = event.changedTouches[0].clientX;
-        const endY = event.changedTouches[0].clientY;
-        const deltaX = endX - this.startX;
-        const deltaY = endY - this.startY;
+        if (this.game.playing) {
+            const deltaX = event.changedTouches[0].clientX - this.startX;
+            const deltaY = event.changedTouches[0].clientY - this.startY;
 
-        // Check if it's a swipe (minimal distance threshold)
-        const swipeThreshold = 50;
-        if (
-            Math.abs(deltaX) > swipeThreshold ||
-            Math.abs(deltaY) > swipeThreshold
-        ) {
-            // Determine swipe direction
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                // Horizontal swipe
-                if (deltaX > 0) {
-                    this.player?.move("right");
+            const swipeThreshold = 50;
+            if (
+                Math.abs(deltaX) > swipeThreshold ||
+                Math.abs(deltaY) > swipeThreshold
+            ) {
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    if (deltaX > 0) {
+                        this.player?.move("right");
+                    } else {
+                        this.player?.move("left");
+                    }
                 } else {
-                    this.player?.move("left");
-                }
-            } else {
-                // Vertical swipe
-                if (deltaY > 0) {
-                    this.player?.move("down");
-                } else {
-                    this.player?.move("up");
+                    if (deltaY > 0) {
+                        this.player?.move("down");
+                    } else {
+                        this.player?.move("up");
+                    }
                 }
             }
         }

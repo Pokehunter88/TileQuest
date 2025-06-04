@@ -25,7 +25,8 @@ export default class BrokenTile {
             if (
                 this.particles[i][2] / 2 +
                     0.5 -
-                    (this.time - this.fadeOutTime) * (this.particles[i][3] / 2 + 0.5) <
+                    (this.time - this.fadeOutTime) *
+                        (this.particles[i][3] / 2 + 0.5) <
                 0
             ) {
                 this.particles.splice(i, i);
@@ -33,7 +34,6 @@ export default class BrokenTile {
                 this.ctx.fillStyle = `rgba(${this.particles[i][0] * 30 + 71}, ${
                     this.particles[i][0] * 30 + 71
                 }, ${this.particles[i][0] * 30 + 71}, 1)`;
-                // this.ctx.fillStyle = "red";
 
                 this.ctx.fillRect(
                     this.tileX * 16 + this.particles[i][0] * 16,
@@ -45,18 +45,25 @@ export default class BrokenTile {
                 this.ctx.fillStyle = `rgba(${this.particles[i][0] * 30 + 71}, ${
                     this.particles[i][0] * 30 + 71
                 }, ${this.particles[i][0] * 30 + 71}, 1)`;
-                // this.ctx.fillStyle = "red";
 
                 this.ctx.fillRect(
-                    this.tileX * 16 + this.particles[i][0] * 16,
-                    this.tileY * 16 + this.particles[i][1] * 16,
+                    this.tileX * 16 +
+                        this.particles[i][0] * 16 +
+                        (this.time - this.fadeOutTime) *
+                            (this.particles[i][3] / 2 + 0.5),
+                    this.tileY * 16 +
+                        this.particles[i][1] * 16 +
+                        (this.time - this.fadeOutTime) *
+                            (this.particles[i][3] / 2 + 0.5),
                     (this.particles[i][2] / 2 +
                         0.5 -
-                        (this.time - this.fadeOutTime) * (this.particles[i][3] / 2 + 0.5)) *
+                        (this.time - this.fadeOutTime) *
+                            (this.particles[i][3] / 2 + 0.5)) *
                         2,
                     (this.particles[i][2] / 2 +
                         0.5 -
-                        (this.time - this.fadeOutTime) * (this.particles[i][3] / 2 + 0.5)) *
+                        (this.time - this.fadeOutTime) *
+                            (this.particles[i][3] / 2 + 0.5)) *
                         2
                 );
             }

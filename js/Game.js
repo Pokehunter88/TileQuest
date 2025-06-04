@@ -4,6 +4,8 @@ import Levels from "./Levels.js";
 import Renderer from "./Renderer.js";
 import Input from "./Input.js";
 import Tiles from "./Tiles.js";
+import StartScreen from "./StartScreen.js";
+import PauseMenu from "./PauseMenu.js";
 
 class Game {
     static instance;
@@ -11,41 +13,64 @@ class Game {
         Game.instance = this;
         this.canvas = document.getElementById("canvas1");
         this.ctx = new CanvasManager(this.canvas, 192, 256);
+        this.playing = false;
 
         this.restartButton = document.getElementById("restart");
         this.restartButton?.addEventListener("click", () => this.restart());
 
+        this.pauseMenu = new PauseMenu(this);
+
         this.menuButton = document.getElementById("menu-button");
         this.menuButton?.addEventListener("click", () => {
-            if (
-                document.documentElement.style.getPropertyValue(
-                    "--menu-visible"
-                ) == 0 ||
-                document.documentElement.style.getPropertyValue(
-                    "--menu-visible"
-                ) === ""
-            ) {
-                document.documentElement.style.setProperty(
-                    "--menu-visible",
-                    100
-                );
-            } else {
-                document.documentElement.style.setProperty("--menu-visible", 0);
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                navigator.keyboard.lock(["Escape"]);
+            }
+
+            if (this.playing) {
+                this.pauseMenu.showing = !this.pauseMenu.showing;
+
+                if (this.pauseMenu.showing) {
+                    this.pauseMenu.selected = 0;
+                }
+
+                // if (
+                //     document.documentElement.style.getPropertyValue(
+                //         "--menu-visible"
+                //     ) == 0 ||
+                //     document.documentElement.style.getPropertyValue(
+                //         "--menu-visible"
+                //     ) === ""
+                // ) {
+                //     document.documentElement.style.setProperty(
+                //         "--menu-visible",
+                //         100
+                //     );
+                // } else {
+                //     document.documentElement.style.setProperty(
+                //         "--menu-visible",
+                //         0
+                //     );
+                // }
             }
         });
 
-        // document.addEventListener("click", () => {
-        //     document.body.requestFullscreen();
-        // });
-
         this.closeButton = document.getElementById("close-button");
         this.closeButton?.addEventListener("click", () => {
-            document.documentElement.style.setProperty("--menu-visible", 0);
+            if (
+                this.playing &&
+                document.documentElement.style.getPropertyValue(
+                    "--menu-visible"
+                ) == 100
+            ) {
+                document.documentElement.style.setProperty("--menu-visible", 0);
+                this.startScreen();
+            }
         });
 
         this.levels = new Levels(this.canvas);
         this.input = new Input(this);
-        this.player = new Player(this.levels, this.ctx, this.input);
+        this.player = new Player(this, this.levels, this.ctx, this.input);
         this.input.player = this.player;
         this.renderer = new Renderer(this.levels, this.player, this.ctx, this);
         this.player.renderer = this.renderer;
@@ -98,16 +123,15 @@ class Game {
         });
 
         this.lastFrame = Date.now();
-        requestAnimationFrame(() => this.update());
 
-        document.documentElement.style.setProperty(
-            "--canvas-scale",
-            this.levels.getZoom(this.levels.level)
-        );
+        // document.documentElement.style.setProperty(
+        //     "--canvas-scale",
+        //     this.levels.getZoom(this.levels.level)
+        // );
 
-        setTimeout(() => {
-            document.documentElement.style.setProperty("--scale-speed", "1s");
-        }, 100);
+        // setTimeout(() => {
+        //     document.documentElement.style.setProperty("--scale-speed", "1s");
+        // }, 100);
 
         const levelsToChange = this.levels;
 
@@ -142,9 +166,35 @@ class Game {
                         console.log(error);
                     });
             });
+
+        const url = new URL(window.location);
+        const startLevel = url.searchParams.get("level");
+
+        if (startLevel != null) {
+            setTimeout(() => this.start(startLevel), 100);
+        } else {
+            new StartScreen(this);
+        }
+    }
+
+    start(level) {
+        requestAnimationFrame(() => this.update());
+        document.documentElement.style.setProperty("--ui-visible", "1");
+        this.levels.level = level;
+        this.restart();
+        this.renderer.timers.start = 0;
+        this.playing = true;
+    }
+
+    startScreen() {
+        this.playing = false;
+        new StartScreen(this);
+        document.documentElement.style.setProperty("--ui-visible", 0);
     }
 
     update() {
+        if (!this.playing) return;
+
         const delta = (Date.now() - this.lastFrame) / 1000;
 
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -154,6 +204,7 @@ class Game {
         this.tiles.drawTiles();
         this.player.update(delta);
         this.renderer.update(delta);
+        this.pauseMenu.update();
 
         this.lastFrame = Date.now();
 
@@ -161,6 +212,7 @@ class Game {
     }
 
     restart() {
+        localStorage.setItem("level", this.levels.level);
         this.player.restart();
         this.levels.restart();
         this.renderer.restart();
