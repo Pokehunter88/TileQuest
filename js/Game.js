@@ -6,6 +6,7 @@ import Input from "./Input.js";
 import Tiles from "./Tiles.js";
 import StartScreen from "./StartScreen.js";
 import PauseMenu from "./PauseMenu.js";
+import LevelSelect from "./LevelSelect.js";
 
 class Game {
     static instance;
@@ -189,6 +190,12 @@ class Game {
     startScreen() {
         this.playing = false;
         new StartScreen(this);
+        document.documentElement.style.setProperty("--ui-visible", 0);
+    }
+
+    levelSelectScreen() {
+        this.playing = false;
+        new LevelSelect(this);
         document.documentElement.style.setProperty("--ui-visible", 0);
     }
 

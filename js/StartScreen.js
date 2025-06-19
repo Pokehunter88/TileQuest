@@ -68,7 +68,9 @@ export default class StartScreen {
                     x < 154 + this.buttonPadding &&
                     y < 184 + this.buttonPadding
                 ) {
-                    this.currentButton = 2;
+                    if (this.currentButton == 2) {
+                        this.game.levelSelectScreen();
+                    } else this.currentButton = 2;
                 }
             }
         });
@@ -96,6 +98,11 @@ export default class StartScreen {
             }
             if (this.game.input.keysPressed.space && this.currentButton == 1) {
                 this.timers.end = 0;
+            }
+            if (this.game.input.keysPressed.space && this.currentButton == 2) {
+                this.game.levelSelectScreen();
+                this.game.input.keysPressed.space = false;
+                return;
             }
             if (this.game.input.keysPressed.w) {
                 this.currentButton--;
