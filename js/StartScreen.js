@@ -1,3 +1,5 @@
+import LevelSelect from "./LevelSelect.js";
+
 export default class StartScreen {
     constructor(game) {
         this.game = game;
@@ -8,8 +10,8 @@ export default class StartScreen {
             main: 0,
             cursor: 0,
             button1: 1,
-            button2: 1,
-            button3: 1,
+            button2: 0,
+            button3: 0,
             end: this.animationLength,
         };
 
@@ -18,6 +20,8 @@ export default class StartScreen {
 
         this.restartMenuShowing = false;
         this.restartMenuButton = false;
+
+        this.running = true;
 
         document.addEventListener("click", (event) => {
             const rect = this.game.canvas.getBoundingClientRect();
@@ -68,7 +72,10 @@ export default class StartScreen {
                     x < 154 + this.buttonPadding &&
                     y < 184 + this.buttonPadding
                 ) {
-                    this.currentButton = 2;
+                    if (this.currentButton == 2) {
+                        this.running = false;
+                        new LevelSelect(this.game);
+                    } else this.currentButton = 2;
                 }
             }
         });
@@ -87,6 +94,8 @@ export default class StartScreen {
     }
 
     update() {
+        if (!this.running) return;
+
         if (
             this.timers.end >= this.animationLength &&
             !this.restartMenuShowing
@@ -96,6 +105,13 @@ export default class StartScreen {
             }
             if (this.game.input.keysPressed.space && this.currentButton == 1) {
                 this.timers.end = 0;
+            }
+            if (this.game.input.keysPressed.space && this.currentButton == 2) {
+                // this.timers.end = 0;
+
+                new LevelSelect(this.game);
+                this.game.input.keysPressed.space = false;
+                return;
             }
             if (this.game.input.keysPressed.w) {
                 this.currentButton--;
@@ -292,8 +308,8 @@ export default class StartScreen {
                 6,
                 8,
                 (this.restartMenuButton ? 78 : 81) +
-                    Math.sin(this.timers.cursor * 3) -
-                    2,
+                Math.sin(this.timers.cursor * 3) -
+                2,
                 this.restartMenuButton ? 130 : 142,
                 6,
                 8
@@ -316,16 +332,17 @@ export default class StartScreen {
                 192,
                 (this.timers.end / this.animationLength) * 128
             );
-        }
 
-        if (this.timers.end < this.animationLength) {
             this.timers.end += delta;
 
             if (this.timers.end >= this.animationLength) {
                 if (this.currentButton == 0) {
+                    localStorage.setItem("unlockedLevel", 0);
                     this.game.start(0);
-                } else {
+                } else if (this.currentButton == 1) {
                     this.game.start(localStorage.getItem("level") ?? 0);
+                } else if (this.currentButton == 2) {
+                    new LevelSelect(this.game);
                 }
                 return true;
             }

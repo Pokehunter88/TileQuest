@@ -6,6 +6,7 @@ import Input from "./Input.js";
 import Tiles from "./Tiles.js";
 import StartScreen from "./StartScreen.js";
 import PauseMenu from "./PauseMenu.js";
+import LevelSelect from "./LevelSelect.js";
 
 class Game {
     static instance;
@@ -87,6 +88,7 @@ class Game {
             setTimeout(() => this.start(startLevel), 100);
         } else {
             new StartScreen(this);
+            // new LevelSelect(this);
         }
     }
 
@@ -126,6 +128,7 @@ class Game {
 
     restart() {
         localStorage.setItem("level", this.levels.level);
+        localStorage.setItem("unlockedLevel", Math.max(this.levels.level, localStorage.getItem("unlockedLevel") ?? 0));
         this.player.restart();
         this.levels.restart();
         this.renderer.restart();

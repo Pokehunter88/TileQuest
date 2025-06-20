@@ -9,6 +9,8 @@ export default class Renderer {
             startScreen: new Image(),
             restartMenu: new Image(),
             pauseMenu: new Image(),
+            levelSelect: new Image(),
+            levelSelectUI: new Image(),
             tiles: new Image(),
             player: new Image(),
             collect: new Image(),
@@ -19,6 +21,8 @@ export default class Renderer {
         this.images.startScreen.src = "assets/Start Screen.png";
         this.images.restartMenu.src = "assets/Restart Menu.png";
         this.images.pauseMenu.src = "assets/Pause Menu.png";
+        this.images.levelSelect.src = "assets/Level Select.png";
+        this.images.levelSelectUI.src = "assets/Level Select UI.png";
         this.images.tiles.src = "assets/Tile Sheet.png";
         this.images.player.src = "assets/Player Sheet.png";
         this.images.collect.src = "assets/Collect.png";
