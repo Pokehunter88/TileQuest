@@ -6,7 +6,6 @@ import Input from "./Input.js";
 import Tiles from "./Tiles.js";
 import StartScreen from "./StartScreen.js";
 import PauseMenu from "./PauseMenu.js";
-import LevelSelect from "./LevelSelect.js";
 
 class Game {
     static instance;
@@ -98,6 +97,7 @@ class Game {
         this.levels.level = level;
         this.restart();
         this.renderer.timers.start = 0;
+        this.renderer.timers.end = 0;
         this.playing = true;
     }
 

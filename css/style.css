@@ -16,6 +16,7 @@
     /* transition: transform var(--scale-speed) ease; */
     image-rendering: pixelated;
     user-select: none;
+    -webkit-user-select: none;
 }
 
 @media (min-aspect-ratio: 3/4) {
@@ -43,6 +44,7 @@
     z-index: 3;
     overflow: hidden;
     user-select: none;
+    -webkit-user-select: none;
 
     transition: opacity 0.1s ease-in;
     opacity: var(--ui-visible);
@@ -61,6 +63,7 @@
     z-index: 3;
     overflow: hidden;
     user-select: none;
+    -webkit-user-select: none;
 
     transition: opacity 0.1s ease-in;
     opacity: var(--ui-visible);
@@ -78,6 +81,7 @@
     image-rendering: pixelated;
     overflow: hidden;
     user-select: none;
+    -webkit-user-select: none;
 }
 
 #menu-bg {
@@ -88,6 +92,7 @@
     z-index: 4;
     overflow: hidden;
     user-select: none;
+    -webkit-user-select: none;
 }
 
 #menu-left,
@@ -98,6 +103,7 @@
     z-index: 5;
     overflow: hidden;
     user-select: none;
+    -webkit-user-select: none;
 }
 
 /* Arrows centered vertically, hugging left/right edges */
@@ -109,6 +115,7 @@
     opacity: var(--menu-visible);
     transition: opacity 0.1s ease-in;
     user-select: none;
+    -webkit-user-select: none;
 }
 
 #menu-right {
@@ -119,6 +126,7 @@
     opacity: var(--menu-visible);
     transition: opacity 0.1s ease-in;
     user-select: none;
+    -webkit-user-select: none;
 }
 
 /* Close button in the top-right corner */
@@ -130,6 +138,7 @@
     opacity: var(--menu-visible);
     transition: opacity 0.1s ease-in;
     user-select: none;
+    -webkit-user-select: none;
 }
 
 
@@ -144,6 +153,7 @@ body {
     -webkit-overflow-scrolling: touch;
 
     user-select: none;
+    -webkit-user-select: none;
 }
 
 ::-webkit-scrollbar {

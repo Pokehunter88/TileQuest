@@ -23,64 +23,70 @@ export default class StartScreen {
 
         this.running = true;
 
-        document.addEventListener("click", (event) => {
-            const rect = this.game.canvas.getBoundingClientRect();
-            const x = (192 / (rect.right - rect.left)) * (event.x - rect.left);
-            const y = (192 / (rect.right - rect.left)) * (event.y - rect.top);
-            if (this.restartMenuShowing) {
-                if (
-                    x > 88 - this.buttonPadding &&
-                    y > 131 - this.buttonPadding &&
-                    x < 102 + this.buttonPadding &&
-                    y < 136 + this.buttonPadding
-                ) {
-                    if (this.restartMenuButton) {
-                        this.timers.end = 0;
-                    } else this.restartMenuButton = true;
-                } else if (
-                    x > 91 - this.buttonPadding &&
-                    y > 143 - this.buttonPadding &&
-                    x < 100 + this.buttonPadding &&
-                    y < 148 + this.buttonPadding
-                ) {
-                    if (!this.restartMenuButton) {
-                        this.restartMenuShowing = false;
-                    } else this.restartMenuButton = false;
-                }
-            } else {
-                if (
-                    x > 56 - this.buttonPadding &&
-                    y > 116 - this.buttonPadding &&
-                    x < 138 + this.buttonPadding &&
-                    y < 128 + this.buttonPadding
-                ) {
-                    if (this.currentButton == 0) {
-                        this.newGame();
-                    } else this.currentButton = 0;
-                } else if (
-                    x > 60 - this.buttonPadding &&
-                    y > 144 - this.buttonPadding &&
-                    x < 134 + this.buttonPadding &&
-                    y < 156 + this.buttonPadding
-                ) {
-                    if (this.currentButton == 1) {
-                        this.timers.end = 0;
-                    } else this.currentButton = 1;
-                } else if (
-                    x > 30 - this.buttonPadding &&
-                    y > 172 - this.buttonPadding &&
-                    x < 154 + this.buttonPadding &&
-                    y < 184 + this.buttonPadding
-                ) {
-                    if (this.currentButton == 2) {
-                        this.running = false;
-                        new LevelSelect(this.game);
-                    } else this.currentButton = 2;
-                }
-            }
-        });
+        this.clickEvent = this.clickEvent.bind(this);
+
+        document.addEventListener("click", this.clickEvent);
 
         requestAnimationFrame(() => this.update());
+    }
+
+    clickEvent(event) {
+        if (this.timers.end < this.animationLength) return;
+        
+        const rect = this.game.canvas.getBoundingClientRect();
+        const x = (192 / (rect.right - rect.left)) * (event.x - rect.left);
+        const y = (192 / (rect.right - rect.left)) * (event.y - rect.top);
+        if (this.restartMenuShowing) {
+            if (
+                x > 88 - this.buttonPadding &&
+                y > 131 - this.buttonPadding &&
+                x < 102 + this.buttonPadding &&
+                y < 136 + this.buttonPadding
+            ) {
+                if (this.restartMenuButton) {
+                    this.timers.end = 0;
+                } else this.restartMenuButton = true;
+            } else if (
+                x > 91 - this.buttonPadding &&
+                y > 143 - this.buttonPadding &&
+                x < 100 + this.buttonPadding &&
+                y < 148 + this.buttonPadding
+            ) {
+                if (!this.restartMenuButton) {
+                    this.restartMenuShowing = false;
+                } else this.restartMenuButton = false;
+            }
+        } else {
+            if (
+                x > 56 - this.buttonPadding &&
+                y > 116 - this.buttonPadding &&
+                x < 138 + this.buttonPadding &&
+                y < 128 + this.buttonPadding
+            ) {
+                if (this.currentButton == 0) {
+                    this.newGame();
+                } else this.currentButton = 0;
+            } else if (
+                x > 60 - this.buttonPadding &&
+                y > 144 - this.buttonPadding &&
+                x < 134 + this.buttonPadding &&
+                y < 156 + this.buttonPadding
+            ) {
+                if (this.currentButton == 1) {
+                    this.timers.end = 0;
+                } else this.currentButton = 1;
+            } else if (
+                x > 30 - this.buttonPadding &&
+                y > 172 - this.buttonPadding &&
+                x < 154 + this.buttonPadding &&
+                y < 184 + this.buttonPadding
+            ) {
+                if (this.currentButton == 2) {
+                    this.running = false;
+                    new LevelSelect(this.game);
+                } else this.currentButton = 2;
+            }
+        }
     }
 
     newGame() {
@@ -94,7 +100,10 @@ export default class StartScreen {
     }
 
     update() {
-        if (!this.running) return;
+        if (!this.running) {
+            document.removeEventListener("click", this.clickEvent);
+            return
+        };
 
         if (
             this.timers.end >= this.animationLength &&
@@ -344,6 +353,8 @@ export default class StartScreen {
                 } else if (this.currentButton == 2) {
                     new LevelSelect(this.game);
                 }
+
+                document.removeEventListener("click", this.clickEvent);
                 return true;
             }
         }

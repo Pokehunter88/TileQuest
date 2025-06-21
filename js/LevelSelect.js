@@ -1,9 +1,10 @@
 export default class LevelSelect {
     constructor(game) {
         this.game = game;
-        this.page = 0;
+        this.unlockedLevel = Number(localStorage.getItem("unlockedLevel") ?? 0);
+        this.page = Math.floor(this.unlockedLevel / 9);
         this.levelsPerPage = 9;
-        this.totalLevels = this.game.levels.levels.length;
+        this.totalLevels = 25 ?? this.game.levels.levels.length;
         this.totalPages = Math.ceil(this.totalLevels / this.levelsPerPage);
         this.buttonSize = 48;
         this.spacing = 5;
@@ -12,81 +13,87 @@ export default class LevelSelect {
 
         this.animationLength = 1;
         this.timers = {
-            start: 0,
             end: this.animationLength
         }
 
         this.onBackButton = false;
-        this.currentLevel = 4;
-
-        this.unlockedLevel = localStorage.getItem("unlockedLevel") ?? 0;
+        this.currentLevel = this.unlockedLevel % 9;
 
         this.running = true;
 
-        document.addEventListener("click", (event) => {
-            const rect = this.game.canvas.getBoundingClientRect();
-            const x = (192 / (rect.right - rect.left)) * (event.x - rect.left);
-            const y = (192 / (rect.right - rect.left)) * (event.y - rect.top);
+        this.clickEvent = this.clickEvent.bind(this);
 
-            // back button
-            if (y < 40) {
-                if (this.onBackButton) {
-                    this.running = false;
-                    this.game.startScreen();
-                }
-                else {
-                    this.onBackButton = true;
-                }
-                return;
-            }
-
-            // left / right page buttons
-            if (x < 20 && y > 120 && y < 136) {
-                this.page = Math.max(this.page - 1, 0);
-                return;
-            }
-            if (x > 172 && y > 120 && y < 136) {
-                this.page = Math.min(this.page + 1, this.totalPages - 1);
-                return;
-            }
-
-            // level buttons
-            const col = Math.floor((x - this.startX) / (this.buttonSize + this.spacing));
-            const row = Math.floor((y - this.startY) / (this.buttonSize + this.spacing));
-            if (col >= 0 && col < 3 && row >= 0 && row < 3) {
-                const bx = this.startX + col * (this.buttonSize + this.spacing);
-                const by = this.startY + row * (this.buttonSize + this.spacing);
-                if (
-                    x > bx &&
-                    y > by &&
-                    x < bx + this.buttonSize &&
-                    y < by + this.buttonSize
-                ) {
-                    const index = this.page * this.levelsPerPage + row * 3 + col;
-                    if (index < this.totalLevels) {
-                        if (this.currentLevel == index && !this.onBackButton) {
-                            this.timers.end = 0;
-                        } else {
-                            this.onBackButton = false;
-                            this.currentLevel = index;
-                        }
-                    }
-                }
-            }
-        });
+        document.addEventListener("click", this.clickEvent);
 
         requestAnimationFrame(() => this.update());
     }
 
+    clickEvent(event) {
+        if (this.timers.end < this.animationLength) return;
+
+        const rect = this.game.canvas.getBoundingClientRect();
+        const x = (192 / (rect.right - rect.left)) * (event.x - rect.left);
+        const y = (192 / (rect.right - rect.left)) * (event.y - rect.top);
+
+        // back button
+        if (y < 40 && y > 5 && x < 96) {
+            if (this.onBackButton) {
+                this.running = false;
+                this.game.startScreen();
+            }
+            else {
+                this.onBackButton = true;
+            }
+            return;
+        }
+
+        // left / right page buttons
+        if (x < 20 && y > 60) {
+            this.page = Math.max(this.page - 1, 0);
+            return;
+        }
+        if (x > 172 && y > 60) {
+            this.page = Math.min(this.page + 1, this.totalPages - 1);
+            return;
+        }
+
+        // level buttons
+        const col = Math.floor((x - this.startX) / (this.buttonSize + this.spacing));
+        const row = Math.floor((y - this.startY) / (this.buttonSize + this.spacing));
+        if (col >= 0 && col < 3 && row >= 0 && row < 3) {
+            const bx = this.startX + col * (this.buttonSize + this.spacing);
+            const by = this.startY + row * (this.buttonSize + this.spacing);
+            if (
+                x > bx &&
+                y > by &&
+                x < bx + this.buttonSize &&
+                y < by + this.buttonSize
+            ) {
+                const index = this.page * this.levelsPerPage + row * 3 + col;
+                if (index < this.totalLevels) {
+                    if (this.currentLevel == row * 3 + col && !this.onBackButton) {
+                        if (this.currentLevel + this.page * this.levelsPerPage <= this.unlockedLevel) {
+                            this.timers.end = 0;
+                        }
+                    } else {
+                        this.onBackButton = false;
+                        this.currentLevel = row * 3 + col;
+                    }
+                }
+            }
+        }
+    }
+
     update() {
-        if (!this.running) return;
+        if (!this.running) {
+            document.removeEventListener("click", this.clickEvent);
+            return
+        };
 
         if (
             this.timers.end >= this.animationLength
         ) {
             if (this.game.input.keysPressed.space) {
-                // this.timers.end = 0;
-
                 if (this.onBackButton) {
                     this.game.startScreen();
                     this.game.input.keysPressed.space = false;
@@ -113,7 +120,7 @@ export default class LevelSelect {
 
                     this.game.input.keysPressed.w = false;
                 } else if (this.game.input.keysPressed.s) {
-                    if (this.currentLevel < 6) {
+                    if ((this.page == this.totalPages - 1 && this.currentLevel < (this.totalLevels % 9 == 0 ? 9 : this.totalLevels % 9) - 3) || (this.page != this.totalPages - 1 && this.currentLevel < 6)) {
                         this.currentLevel += 3;
                     }
 
@@ -127,10 +134,14 @@ export default class LevelSelect {
 
                     this.game.input.keysPressed.a = false;
                 } else if (this.game.input.keysPressed.d) {
-                    if (this.currentLevel < 8 && this.currentLevel % 3 != 2) {
+                    if (this.currentLevel < 8 && this.currentLevel % 3 != 2 && (this.page == this.totalPages - 1 ? this.currentLevel < (this.totalLevels % 9 == 0 ? 9 : this.totalLevels % 9) - 1 : true)) {
                         this.currentLevel += 1;
                     } else if (this.currentLevel % 3 == 2) {
                         this.page = Math.min(this.page + 1, this.totalPages - 1);
+
+                        if (this.page == this.totalPages - 1) {
+                            this.currentLevel = Math.min((this.totalLevels % 9 == 0 ? 9 : this.totalLevels % 9) - 1, this.currentLevel)
+                        }
                     }
 
                     this.game.input.keysPressed.d = false;
@@ -138,7 +149,7 @@ export default class LevelSelect {
             }
         }
 
-        const delta = (Date.now() - this.game.lastFrame) / 1000;
+        const delta = (window.performance.now() - this.game.lastFrame) / 1000;
 
         const ctx = this.game.ctx;
 
@@ -292,7 +303,7 @@ export default class LevelSelect {
             return;
         }
 
-        this.game.lastFrame = Date.now();
+        this.game.lastFrame = window.performance.now();
         requestAnimationFrame(() => this.update());
     }
 
@@ -320,6 +331,8 @@ export default class LevelSelect {
                 } else {
                     this.game.start(this.currentLevel + this.page * this.levelsPerPage);
                 }
+
+                document.removeEventListener("click", this.clickEvent);
                 return true;
             }
         }
