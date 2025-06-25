@@ -221,7 +221,7 @@ export default class StartScreen {
             this.restartMenu();
         }
 
-        const delta = (Date.now() - this.game.lastFrame) / 1000;
+        const delta = (window.performance.now() - this.game.lastFrame) / 1000;
 
         this.timers.main += delta;
         this.timers.cursor += delta;
@@ -279,7 +279,7 @@ export default class StartScreen {
             return;
         }
 
-        this.game.lastFrame = Date.now();
+        this.game.lastFrame = window.performance.now();
 
         requestAnimationFrame(() => this.update());
     }

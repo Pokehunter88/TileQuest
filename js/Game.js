@@ -44,7 +44,7 @@ class Game {
         this.player.renderer = this.renderer;
         this.tiles = new Tiles(this.levels, this.ctx, this.renderer);
 
-        this.lastFrame = Date.now();
+        this.lastFrame = window.performance.now();
 
         const levelsToChange = this.levels;
 
@@ -109,7 +109,7 @@ class Game {
     update() {
         if (!this.playing) return;
 
-        const delta = (Date.now() - this.lastFrame) / 1000;
+        const delta = (window.performance.now() - this.lastFrame) / 1000;
 
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.fillStyle = "#1E1F3B";
@@ -120,7 +120,7 @@ class Game {
         this.renderer.update(delta);
         this.pauseMenu.update();
 
-        this.lastFrame = Date.now();
+        this.lastFrame = window.performance.now();
 
         requestAnimationFrame(() => this.update());
     }
