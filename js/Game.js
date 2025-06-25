@@ -109,13 +109,13 @@ class Game {
     update() {
         if (!this.playing) return;
 
-        const delta = (window.performance.now() - this.lastFrame) / 1000;
 
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.fillStyle = "#1E1F3B";
         this.ctx.fillRect(0, 0, 192, 256);
 
         this.tiles.drawTiles();
+        const delta = (window.performance.now() - this.lastFrame) / 1000;
         this.player.update(delta);
         this.renderer.update(delta);
         this.pauseMenu.update();
