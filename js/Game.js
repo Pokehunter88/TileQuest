@@ -93,12 +93,11 @@ class Game {
 
     start(level) {
         requestAnimationFrame(() => this.update());
+        this.playing = true;
         document.documentElement.style.setProperty("--ui-visible", "1");
         this.levels.level = level;
         this.restart();
         this.renderer.timers.start = 0;
-        this.renderer.timers.end = 0;
-        this.playing = true;
     }
 
     startScreen() {

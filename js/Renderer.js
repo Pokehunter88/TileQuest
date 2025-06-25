@@ -130,10 +130,6 @@ export default class Renderer {
                 }
                 this.game.restart();
                 this.timers.start = 0;
-                document.documentElement.style.setProperty(
-                    "--canvas-scale",
-                    this.levels.getZoom(this.levels.level)
-                );
             }
         }
     }

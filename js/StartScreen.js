@@ -92,7 +92,7 @@ export default class StartScreen {
     newGame() {
         this.game.input.keysPressed.space = false;
 
-        if ((localStorage.getItem("level") ?? 0) != 0) {
+        if ((localStorage.getItem("unlockedLevel") ?? 0) != 0) {
             this.restartMenuShowing = true;
         } else {
             this.timers.end = 0;
@@ -346,10 +346,11 @@ export default class StartScreen {
 
             if (this.timers.end >= this.animationLength) {
                 if (this.currentButton == 0) {
+                    localStorage.setItem("level", 0);
                     localStorage.setItem("unlockedLevel", 0);
                     this.game.start(0);
                 } else if (this.currentButton == 1) {
-                    this.game.start(localStorage.getItem("level") ?? 0);
+                    this.game.start(Number(localStorage.getItem("level") ?? 0));
                 } else if (this.currentButton == 2) {
                     new LevelSelect(this.game);
                 }

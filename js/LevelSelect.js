@@ -2,9 +2,10 @@ export default class LevelSelect {
     constructor(game) {
         this.game = game;
         this.unlockedLevel = Number(localStorage.getItem("unlockedLevel") ?? 0);
-        this.page = Math.floor(this.unlockedLevel / 9);
+        this.selectedLevel = Number(localStorage.getItem("level") ?? 0);
+        this.page = Math.floor(this.selectedLevel / 9);
         this.levelsPerPage = 9;
-        this.totalLevels = 25 ?? this.game.levels.levels.length;
+        this.totalLevels = this.game.levels.levels.length;
         this.totalPages = Math.ceil(this.totalLevels / this.levelsPerPage);
         this.buttonSize = 48;
         this.spacing = 5;
@@ -17,7 +18,7 @@ export default class LevelSelect {
         }
 
         this.onBackButton = false;
-        this.currentLevel = this.unlockedLevel % 9;
+        this.currentLevel = this.selectedLevel % 9;
 
         this.running = true;
 
